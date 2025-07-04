@@ -68,14 +68,14 @@
                         </div>
                     </div>
                     <div id="import-status" class="mb-4 text-center"></div>
-                    <p class="text-sm text-gray-500 mb-4">Klicke auf ein Spiel, um die Detailansicht zu öffnen.</p>
+                    <p class="text-sm text-gray-500 mb-4">Klicke auf ein Spiel, um eine Auswertung auszuwählen.</p>
                     <div id="game-archive-list" class="space-y-2">
                         <!-- Game list will be populated here -->
                     </div>
                 </div>
             </div>
             
-            <!-- View 3: Game Detail View -->
+            <!-- View 3: Graphical Game Detail View -->
             <div id="view-game-detail" class="view">
                 <div class="bg-white p-6 rounded-lg shadow-md">
                     <div id="game-detail-header" class="flex justify-between items-start mb-6">
@@ -86,7 +86,7 @@
                         <div class="flex space-x-2">
                              <button id="correct-names-btn" class="bg-purple-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-purple-600 transition">Namen korrigieren</button>
                              <button id="edit-game-btn" class="bg-yellow-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-yellow-600 transition">Bearbeiten</button>
-                             <button id="back-to-archive-btn" class="bg-gray-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-700 transition">Zurück</button>
+                             <button class="back-to-archive-btn bg-gray-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-700 transition">Zurück</button>
                         </div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -99,12 +99,31 @@
                                 <!-- Player list will be populated here -->
                             </div>
                         </div>
+                        <div class="md:col-span-3 p-4 bg-gray-50 rounded-lg mt-6">
+                            <canvas id="scoring-run-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- View 4: Tabular Game Detail View -->
+            <div id="view-tabular-detail" class="view">
+                 <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <h2 id="tabular-detail-title" class="text-2xl font-bold">Tabellarische Auswertung</h2>
+                             <p id="tabular-detail-subtitle" class="text-gray-600"></p>
+                        </div>
+                        <button class="back-to-archive-btn bg-gray-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-700 transition">Zurück</button>
+                    </div>
+                    <div id="tabular-content" class="space-y-8">
+                        <!-- Tabular data will be rendered here -->
                     </div>
                 </div>
             </div>
 
 
-            <!-- View 4: Statistics -->
+            <!-- View 5: Statistics -->
             <div id="view-statistik" class="view">
                 <div class="bg-white p-6 rounded-lg shadow-md">
                     <h2 class="text-2xl font-bold mb-4">Saison-Statistiken</h2>
@@ -128,7 +147,18 @@
         </footer>
     </div>
     
-    <!-- Name Correction Modal -->
+    <!-- Modals -->
+    <div id="view-selection-modal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white p-8 rounded-lg shadow-xl max-w-sm w-full mx-4 text-center">
+            <h3 class="text-xl font-bold mb-6">Auswertung anzeigen</h3>
+            <div class="flex flex-col space-y-4">
+                <button id="select-graphical-btn" class="bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 transition">Grafische Auswertung</button>
+                <button id="select-tabular-btn" class="bg-green-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-green-600 transition">Tabellarische Auswertung</button>
+            </div>
+            <button id="selection-cancel-btn" class="mt-6 text-sm text-gray-600 hover:text-gray-800">Abbrechen</button>
+        </div>
+    </div>
+    
     <div id="name-correction-modal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 hidden">
         <div class="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full mx-4">
             <h3 class="text-lg font-bold mb-4">Spielernamen korrigieren</h3>
@@ -147,7 +177,7 @@
 
     <script type="module">
         // --- CONFIG & INITIALIZATION ---
-        const APP_VERSION = "1.4.2-in-memory";
+        const APP_VERSION = "1.5.2-in-memory";
         const SG_BUENDE_DUENNE = "SG Bünde-Dünne";
         const STANDARD_ROSTER_SGBD = {
             2: 'Finn Diekmann',
@@ -170,7 +200,9 @@
         let allGames = [];
         let currentlyEditingGameId = null;
         let scoreChart = null;
+        let scoringRunChart = null; // New chart instance
         let selectedPlayers = [];
+        let selectedGameForDetail = null;
 
         // --- DOM ELEMENTS ---
         const views = {
@@ -178,6 +210,7 @@
             archiv: document.getElementById('view-archiv'),
             statistik: document.getElementById('view-statistik'),
             gameDetail: document.getElementById('view-game-detail'),
+            tabularDetail: document.getElementById('view-tabular-detail'),
         };
         const tabs = {
             eingabe: document.getElementById('tab-eingabe'),
@@ -194,22 +227,35 @@
         const statsContainer = document.getElementById('stats-container');
         const statsPlaceholder = document.getElementById('stats-placeholder');
         const appVersionDisplay = document.getElementById('app-version');
+        // Graphical Detail View
         const gameDetailTitle = document.getElementById('game-detail-title');
         const gameDetailSubtitle = document.getElementById('game-detail-subtitle');
         const scoreChartCanvas = document.getElementById('score-chart');
+        const scoringRunChartCanvas = document.getElementById('scoring-run-chart'); // New canvas
         const editGameBtn = document.getElementById('edit-game-btn');
-        const backToArchiveBtn = document.getElementById('back-to-archive-btn');
         const playerGoalList = document.getElementById('player-goal-list');
+        // Tabular Detail View
+        const tabularDetailTitle = document.getElementById('tabular-detail-title');
+        const tabularDetailSubtitle = document.getElementById('tabular-detail-subtitle');
+        const tabularContent = document.getElementById('tabular-content');
+        // Shared
+        const backToArchiveBtns = document.querySelectorAll('.back-to-archive-btn');
         const exportBtn = document.getElementById('export-btn');
         const importBtn = document.getElementById('import-btn');
         const importFileInput = document.getElementById('import-file-input');
         const importStatus = document.getElementById('import-status');
+        // Modals
         const correctNamesBtn = document.getElementById('correct-names-btn');
         const nameCorrectionModal = document.getElementById('name-correction-modal');
         const nameCorrectionList = document.getElementById('name-correction-list');
         const nameCorrectionSaveBtn = document.getElementById('name-correction-save');
         const nameCorrectionCancelBtn = document.getElementById('name-correction-cancel');
         const nameCorrectionApplyAllBtn = document.getElementById('name-correction-apply-all');
+        const viewSelectionModal = document.getElementById('view-selection-modal');
+        const selectGraphicalBtn = document.getElementById('select-graphical-btn');
+        const selectTabularBtn = document.getElementById('select-tabular-btn');
+        const selectionCancelBtn = document.getElementById('selection-cancel-btn');
+
         
         // --- UI & VIEW MANAGEMENT ---
         function setupUI() {
@@ -220,7 +266,9 @@
             processBtn.addEventListener('click', handleProcessAndSaveGame);
             teamSelect.addEventListener('change', renderStatistics);
             cancelBtn.addEventListener('click', resetToNewEntryMode);
-            backToArchiveBtn.addEventListener('click', () => switchView('archiv'));
+            
+            backToArchiveBtns.forEach(btn => btn.addEventListener('click', () => switchView('archiv')));
+            
             editGameBtn.addEventListener('click', () => {
                 if (currentlyEditingGameId) {
                     startEditing(currentlyEditingGameId);
@@ -234,6 +282,17 @@
             nameCorrectionCancelBtn.addEventListener('click', () => nameCorrectionModal.classList.add('hidden'));
             nameCorrectionApplyAllBtn.addEventListener('click', applyAllRosterNames);
             
+            // Modal Listeners
+            selectionCancelBtn.addEventListener('click', () => viewSelectionModal.classList.add('hidden'));
+            selectGraphicalBtn.addEventListener('click', () => {
+                viewSelectionModal.classList.add('hidden');
+                renderGameDetail(selectedGameForDetail);
+            });
+            selectTabularBtn.addEventListener('click', () => {
+                viewSelectionModal.classList.add('hidden');
+                renderTabularDetail(selectedGameForDetail);
+            });
+
             nameCorrectionList.addEventListener('click', (event) => {
                 if (event.target.classList.contains('kadername-btn')) {
                     const button = event.target;
@@ -262,8 +321,8 @@
                         deleteGame(gameId);
                     }
                 } else if (gameButton) {
-                    const gameId = gameButton.dataset.gameId;
-                    renderGameDetail(gameId);
+                    selectedGameForDetail = gameButton.dataset.gameId;
+                    viewSelectionModal.classList.remove('hidden');
                 }
             });
 
@@ -285,7 +344,6 @@
                 }
             });
             
-            // Set initial placeholder text only once on startup
             gameDataInput.value = `Presseinformation - lang
 OWLmB-KL1, Spiel Nr. 621114216 am 28.09.24
 ...`;
@@ -295,7 +353,7 @@ OWLmB-KL1, Spiel Nr. 621114216 am 28.09.24
         }
         
         function switchView(viewName) {
-            if (currentlyEditingGameId && viewName !== 'eingabe' && viewName !== 'gameDetail') {
+            if (currentlyEditingGameId && viewName !== 'eingabe' && viewName !== 'gameDetail' && viewName !== 'tabularDetail') {
                 resetToNewEntryMode();
             }
             Object.values(views).forEach(view => view.classList.remove('view-active'));
@@ -307,6 +365,7 @@ OWLmB-KL1, Spiel Nr. 621114216 am 28.09.24
             if (tabs[viewName]) {
                 tabs[viewName].classList.add('tab-active');
             } else {
+                // For detail views, keep the 'archiv' tab active
                 tabs.archiv.classList.add('tab-active');
             }
         }
@@ -329,7 +388,7 @@ OWLmB-KL1, Spiel Nr. 621114216 am 28.09.24
 
         function resetToNewEntryMode() {
             currentlyEditingGameId = null;
-            gameDataInput.value = ''; // Clear the input field
+            gameDataInput.value = '';
             inputStatus.innerHTML = '';
             
             eingabeTitle.textContent = 'Neues Spiel hinzufügen';
@@ -557,11 +616,9 @@ OWLmB-KL1, Spiel Nr. 621114216 am 28.09.24
             const index = allGames.findIndex(g => g.id === gameData.id);
 
             if (index > -1) {
-                // Update existing game, preserving name corrections
                 gameData.nameCorrections = allGames[index].nameCorrections;
                 allGames[index] = gameData;
             } else {
-                // Add new game
                 allGames.push(gameData);
             }
             
@@ -574,7 +631,7 @@ OWLmB-KL1, Spiel Nr. 621114216 am 28.09.24
             
             setTimeout(() => {
                 switchView('archiv');
-                updateDynamicContent(); // Update all views after a short delay
+                updateDynamicContent();
             }, 1500);
         }
 
@@ -592,7 +649,14 @@ OWLmB-KL1, Spiel Nr. 621114216 am 28.09.24
                 if (gameExists) {
                     renderGameDetail(currentlyEditingGameId);
                 } else {
-                    // Switch back to archive if the detailed game was deleted
+                    switchView('archiv');
+                }
+            }
+             if (views.tabularDetail.classList.contains('view-active') && currentlyEditingGameId) {
+                const gameExists = allGames.some(g => g.id === currentlyEditingGameId);
+                if (gameExists) {
+                    renderTabularDetail(currentlyEditingGameId);
+                } else {
                     switchView('archiv');
                 }
             }
@@ -729,7 +793,6 @@ OWLmB-KL1, Spiel Nr. 621114216 am 28.09.24
 
                     importStatus.innerHTML = `<p class="text-blue-600">Importiere ${importedGames.length} Spiele...</p>`;
                     
-                    // Overwrite the current in-memory data
                     allGames = importedGames;
                     allGames.sort((a, b) => new Date(a.date.split('.').reverse().join('-')) - new Date(b.date.split('.').reverse().join('-')));
                     updateDynamicContent();
@@ -773,7 +836,12 @@ OWLmB-KL1, Spiel Nr. 621114216 am 28.09.24
         }
         
         const playerColors = {};
-        const colorPalette = ['#e6194B', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#911eb4', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe', '#008080', '#e6beff', '#9A6324', '#fffac8', '#800000', '#aaffc3', '#808000', '#ffd8b1', '#000075', '#a9a9a9'];
+        const colorPalette = [
+            '#d62828', '#f77f00', '#0081a7', '#00afb9', '#8338ec', '#3a86ff', 
+            '#ff006e', '#e63946', '#2a9d8f', '#f4a261', '#e76f51', '#6a994e', 
+            '#a7c957', '#3d405b', '#d90429', '#023047', '#fb8500', '#219ebc', 
+            '#ffb703', '#7cb518'
+        ];
         let colorIndex = 0;
 
         function getPlayerColor(playerName) {
@@ -802,13 +870,131 @@ OWLmB-KL1, Spiel Nr. 621114216 am 28.09.24
                     label: playerName,
                     data: dataPoints,
                     backgroundColor: getPlayerColor(playerName),
-                    radius: dataPoints.map(e => e.is7m ? 8 : 6),
+                    radius: dataPoints.map(e => e.is7m ? 10 : 8),
                     pointStyle: dataPoints.map(e => e.is7m ? 'triangle' : 'circle'),
-                    hoverRadius: 10,
+                    hoverRadius: 12,
                 });
             });
 
             scoreChart.update();
+        }
+
+        function calculateStreaks(game) {
+            const streaks = [{ timeValue: 0, homeStreak: 0, guestStreak: 0 }];
+            if (!game.scoreProgression || game.scoreProgression.length < 2) {
+                return streaks;
+            }
+
+            let homeRun = 0;
+            let guestRun = 0;
+            let lastScore = [0, 0];
+
+            for (let i = 1; i < game.scoreProgression.length; i++) {
+                const entry = game.scoreProgression[i];
+                const currentScore = entry.score;
+
+                if (currentScore[0] > lastScore[0]) { // Home team scored
+                    homeRun++;
+                    guestRun = 0; // Reset opponent's run
+                } else if (currentScore[1] > lastScore[1]) { // Guest team scored
+                    guestRun++;
+                    homeRun = 0; // Reset opponent's run
+                }
+                
+                streaks.push({
+                    timeValue: entry.timeValue,
+                    homeStreak: homeRun,
+                    guestStreak: -guestRun // Negative for charting
+                });
+                lastScore = currentScore;
+            }
+            return streaks;
+        }
+
+        function renderScoringRunChart(game) {
+            if (scoringRunChart) {
+                scoringRunChart.destroy();
+            }
+
+            const streakData = calculateStreaks(game);
+
+            scoringRunChart = new Chart(scoringRunChartCanvas, {
+                type: 'line', // Use line chart to allow 'stepped' property
+                data: {
+                    labels: streakData.map(s => s.timeValue),
+                    datasets: [
+                        {
+                            label: getCorrectedName(game, game.homeTeam),
+                            data: streakData.map(s => s.homeStreak),
+                            backgroundColor: 'rgba(79, 70, 229, 0.5)',
+                            borderColor: 'rgba(79, 70, 229, 1)',
+                            stepped: true,
+                            fill: true,
+                            pointRadius: 0,
+                        },
+                        {
+                            label: getCorrectedName(game, game.guestTeam),
+                            data: streakData.map(s => s.guestStreak),
+                            backgroundColor: 'rgba(220, 38, 38, 0.5)',
+                            borderColor: 'rgba(220, 38, 38, 1)',
+                            stepped: true,
+                            fill: true,
+                            pointRadius: 0,
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Tor-Rhythmus (Läufe)'
+                        },
+                        tooltip: {
+                             callbacks: {
+                                title: function(context) {
+                                    const dataPoint = context[0];
+                                    const minutes = Math.floor(dataPoint.label);
+                                    const seconds = Math.round((dataPoint.label - minutes) * 60);
+                                    return `Minute: ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                                },
+                                label: function(context) {
+                                    const value = context.raw;
+                                    if (value > 0) {
+                                        return `${context.dataset.label}: ${value}:0 Lauf`;
+                                    } else if (value < 0) {
+                                         return `${context.dataset.label}: ${-value}:0 Lauf`;
+                                    }
+                                    return null;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            type: 'linear',
+                            title: {
+                                display: true,
+                                text: 'Spielzeit (Minuten)'
+                            },
+                            ticks: {
+                                stepSize: 5
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Anzahl Tore in Folge'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return Math.abs(value); // Show positive numbers on both sides
+                                }
+                            }
+                        }
+                    }
+                }
+            });
         }
 
         function renderGameDetail(gameId) {
@@ -923,7 +1109,84 @@ OWLmB-KL1, Spiel Nr. 621114216 am 28.09.24
             }
             playerGoalList.innerHTML = playerListHtml || '<p class="text-sm text-gray-500">Keine Tordaten im Spielverlauf gefunden.</p>';
 
+            renderScoringRunChart(game); // Call the new chart rendering function
             switchView('gameDetail');
+        }
+
+        function renderTabularDetail(gameId) {
+            const game = allGames.find(g => g.id === gameId);
+            if (!game) return;
+
+            currentlyEditingGameId = gameId;
+            tabularDetailTitle.textContent = `${getCorrectedName(game, game.homeTeam)} vs ${getCorrectedName(game, game.guestTeam)}`;
+            tabularDetailSubtitle.textContent = `Endstand: ${game.finalScore} am ${game.date}`;
+
+            let contentHtml = '';
+
+            // --- Player Stats Tables ---
+            const renderPlayerTable = (teamName, players) => {
+                let tableHtml = `<div class="overflow-x-auto"><h3 class="text-xl font-bold mb-2 text-indigo-700">${getCorrectedName(game, teamName)}</h3><table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-100"><tr>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Spieler</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tore</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">7m</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" title="Verwarnungen">V</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" title="2-Minuten-Strafen">2'</th>
+                    </tr></thead><tbody class="bg-white divide-y divide-gray-200">`;
+                
+                players.forEach(p => {
+                    tableHtml += `<tr>
+                        <td class="px-4 py-4 whitespace-nowrap font-medium">${getCorrectedName(game, p.name)}</td>
+                        <td class="px-4 py-4 whitespace-nowrap">${p.goals}</td>
+                        <td class="px-4 py-4 whitespace-nowrap">${p.sevenMeterGoals}/${p.sevenMetersAttempted}</td>
+                        <td class="px-4 py-4 whitespace-nowrap">${p.warnings}</td>
+                        <td class="px-4 py-4 whitespace-nowrap">${p.suspensions}</td>
+                    </tr>`;
+                });
+
+                tableHtml += `</tbody></table></div>`;
+                return tableHtml;
+            };
+            
+            contentHtml += `<h2 class="text-2xl font-bold mb-4">Spielerstatistiken</h2>`;
+            const homePlayers = game.players.filter(p => p.team === game.homeTeam);
+            const guestPlayers = game.players.filter(p => p.team === game.guestTeam);
+            contentHtml += '<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">';
+            contentHtml += renderPlayerTable(game.homeTeam, homePlayers);
+            contentHtml += renderPlayerTable(game.guestTeam, guestPlayers);
+            contentHtml += '</div>';
+
+
+            // --- Game Log Table ---
+            contentHtml += `<h2 class="text-2xl font-bold mt-8 mb-4">Spielverlauf</h2>`;
+            contentHtml += `<div class="overflow-x-auto"><table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-100"><tr>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Zeit</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Spielstand</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Torschütze</th>
+                </tr></thead><tbody class="bg-white divide-y divide-gray-200">`;
+            
+            let goalEventIndex = 0;
+            game.scoreProgression.forEach((entry, index) => {
+                if (index === 0) return; // Skip initial 0:0
+
+                let scorerName = '';
+                if (goalEventIndex < game.goalEvents.length && Math.abs(game.goalEvents[goalEventIndex].timeValue - entry.timeValue) < 0.02) {
+                     scorerName = getCorrectedName(game, game.goalEvents[goalEventIndex].scorer);
+                     goalEventIndex++;
+                }
+
+                contentHtml += `<tr>
+                    <td class="px-4 py-4 whitespace-nowrap">${entry.time}</td>
+                    <td class="px-4 py-4 whitespace-nowrap font-bold">${entry.score.join(' : ')}</td>
+                    <td class="px-4 py-4 whitespace-nowrap">${scorerName}</td>
+                </tr>`;
+            });
+
+            contentHtml += `</tbody></table></div>`;
+            
+            tabularContent.innerHTML = contentHtml;
+            switchView('tabularDetail');
         }
 
         function populateTeamSelector() {
