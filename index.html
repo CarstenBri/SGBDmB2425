@@ -41,13 +41,15 @@
             <!-- View 1: Game Data Input -->
             <div id="view-eingabe" class="view">
                 <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h2 id="eingabe-title" class="text-2xl font-bold mb-4">Neues Spiel hinzufügen</h2>
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 id="eingabe-title" class="text-2xl font-bold">Neues Spiel hinzufügen</h2>
+                        <button id="process-and-save-btn" class="bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-transform transform hover:scale-105">
+                            Spiel analysieren & hinzufügen
+                        </button>
+                    </div>
                     <p class="mb-4 text-gray-600">Kopiere den kompletten "Presseinformation - lang" Text aus handball4all hier hinein.</p>
                     <textarea id="game-data-input" rows="15" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" placeholder="Hier die Spieldaten einfügen..."></textarea>
-                    <button id="process-and-save-btn" class="mt-4 w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-transform transform hover:scale-105">
-                        Spiel analysieren & hinzufügen
-                    </button>
-                     <button id="cancel-edit-btn" class="mt-2 w-full bg-gray-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition" style="display: none;">
+                     <button id="cancel-edit-btn" class="mt-4 w-full bg-gray-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition" style="display: none;">
                         Abbrechen
                     </button>
                     <div id="input-status" class="mt-4 text-center"></div>
@@ -145,7 +147,7 @@
 
     <script type="module">
         // --- CONFIG & INITIALIZATION ---
-        const APP_VERSION = "1.4.1-in-memory";
+        const APP_VERSION = "1.4.2-in-memory";
         const SG_BUENDE_DUENNE = "SG Bünde-Dünne";
         const STANDARD_ROSTER_SGBD = {
             2: 'Finn Diekmann',
@@ -283,8 +285,13 @@
                 }
             });
             
+            // Set initial placeholder text only once on startup
+            gameDataInput.value = `Presseinformation - lang
+OWLmB-KL1, Spiel Nr. 621114216 am 28.09.24
+...`;
+            
             switchView('eingabe');
-            resetToNewEntryMode();
+            updateDynamicContent();
         }
         
         function switchView(viewName) {
@@ -322,7 +329,7 @@
 
         function resetToNewEntryMode() {
             currentlyEditingGameId = null;
-            gameDataInput.value = '';
+            gameDataInput.value = ''; // Clear the input field
             inputStatus.innerHTML = '';
             
             eingabeTitle.textContent = 'Neues Spiel hinzufügen';
@@ -330,12 +337,6 @@
             processBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
             processBtn.classList.add('bg-indigo-600', 'hover:bg-indigo-700');
             cancelBtn.style.display = 'none';
-
-            if(!gameDataInput.value) {
-                gameDataInput.value = `Presseinformation - lang
-OWLmB-KL1, Spiel Nr. 621114216 am 28.09.24
-...`;
-            }
         }
 
         // --- DATA PARSING & FORMATTING ---
@@ -492,17 +493,12 @@ OWLmB-KL1, Spiel Nr. 621114216 am 28.09.24
                 game.homeTeam = teamsMatch[1].trim();
                 game.guestTeam = teamsMatch[2].trim();
                 
-                // --- FIX STARTS HERE ---
-                // More flexible regex for the final score. It looks for "Endstand" or "Ergebnis",
-                // optionally allows a halftime score like "(HZ 10:12)", and then captures the final score.
                 const scoreMatch = cleanedText.match(/(?:Endstand|Ergebnis)\s*(?:\(.*\)\s*)?(\d+:\d+)/);
                 if (!scoreMatch) {
-                    // Updated error message for better debugging.
                     console.error("Parsing Error: 'Endstand' or 'Ergebnis' with score not found.");
                     return null;
                 }
-                game.finalScore = scoreMatch[1]; // The captured score is in the first group.
-                // --- FIX ENDS HERE ---
+                game.finalScore = scoreMatch[1];
 
                 const rosterSplit = cleanedText.split('Mannschaftslisten');
                 if (rosterSplit.length < 2) {
@@ -569,18 +565,17 @@ OWLmB-KL1, Spiel Nr. 621114216 am 28.09.24
                 allGames.push(gameData);
             }
             
-            // Sort games by date after adding/updating
             allGames.sort((a, b) => new Date(a.date.split('.').reverse().join('-')) - new Date(b.date.split('.').reverse().join('-')));
-            updateDynamicContent();
-
+            
             const successMessage = currentlyEditingGameId ? `Spiel ${gameData.id} erfolgreich aktualisiert!` : `Spiel ${gameData.id} erfolgreich hinzugefügt!`;
             inputStatus.innerHTML = `<p class="text-green-600">${successMessage}</p>`;
             
             resetToNewEntryMode();
+            
             setTimeout(() => {
                 switchView('archiv');
-                inputStatus.innerHTML = '';
-            }, 2000);
+                updateDynamicContent(); // Update all views after a short delay
+            }, 1500);
         }
 
         function deleteGame(gameId) {
@@ -593,8 +588,13 @@ OWLmB-KL1, Spiel Nr. 621114216 am 28.09.24
             populateTeamSelector();
             renderStatistics();
             if (views.gameDetail.classList.contains('view-active') && currentlyEditingGameId) {
-                // If the detailed game view is open, refresh it in case of changes
-                renderGameDetail(currentlyEditingGameId);
+                const gameExists = allGames.some(g => g.id === currentlyEditingGameId);
+                if (gameExists) {
+                    renderGameDetail(currentlyEditingGameId);
+                } else {
+                    // Switch back to archive if the detailed game was deleted
+                    switchView('archiv');
+                }
             }
         }
 
@@ -1051,7 +1051,6 @@ OWLmB-KL1, Spiel Nr. 621114216 am 28.09.24
         // --- STARTUP ---
         document.addEventListener('DOMContentLoaded', () => {
             setupUI();
-            updateDynamicContent(); // Initial render with empty data
         });
 
     </script>
