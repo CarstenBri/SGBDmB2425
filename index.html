@@ -84,34 +84,35 @@
 </head>
 <body class="bg-gray-100 text-gray-800">
 
-    <div class="container mx-auto p-4 md:p-8 max-w-7xl">
-        <header class="bg-white rounded-xl shadow-md p-6 mb-8">
+    <div class="container mx-auto p-4 max-w-7xl">
+        <header class="bg-white rounded-xl shadow-md p-4 sm:p-6 mb-6">
             <div class="flex items-baseline space-x-3">
-                <h1 class="text-3xl md:text-4xl font-bold text-indigo-600">Handball Statistik</h1>
+                <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-indigo-600">Handball Statistik</h1>
                 <span class="text-sm font-light text-black">by Carsten</span>
             </div>
         </header>
 
         <div class="mb-6 border-b border-gray-200">
-            <nav class="flex space-x-4 overflow-x-auto pb-2">
-                <button id="tab-archiv" class="tab-btn px-4 py-3 font-medium text-sm border-b-2 border-transparent text-gray-500 hover:text-indigo-600 hover:border-gray-300 shrink-0">Archiv & Eingabe</button>
-                <button id="tab-statistik" class="tab-btn px-4 py-3 font-medium text-sm border-b-2 border-transparent text-gray-500 hover:text-indigo-600 hover:border-gray-300 shrink-0">Team-Statistiken</button>
-                <button id="tab-spielauswertung" class="tab-btn px-4 py-3 font-medium text-sm border-b-2 border-transparent text-gray-500 hover:text-indigo-600 hover:border-gray-300 shrink-0">Spielauswertung</button>
-                <button id="tab-spieler" class="tab-btn px-4 py-3 font-medium text-sm border-b-2 border-transparent text-gray-500 hover:text-indigo-600 hover:border-gray-300 shrink-0">Spieler-Profile</button>
-                <button id="tab-h2h" class="tab-btn px-4 py-3 font-medium text-sm border-b-2 border-transparent text-gray-500 hover:text-indigo-600 hover:border-gray-300 shrink-0">H2H-Vergleich</button>
+            <nav class="flex space-x-2 sm:space-x-4 overflow-x-auto pb-2">
+                <button id="tab-archiv" class="tab-btn px-3 py-3 font-medium text-sm border-b-2 border-transparent text-gray-500 hover:text-indigo-600 hover:border-gray-300 shrink-0">Archiv & Eingabe</button>
+                <button id="tab-statistik" class="tab-btn px-3 py-3 font-medium text-sm border-b-2 border-transparent text-gray-500 hover:text-indigo-600 hover:border-gray-300 shrink-0">Team-Statistiken</button>
+                <button id="tab-spielauswertung" class="tab-btn px-3 py-3 font-medium text-sm border-b-2 border-transparent text-gray-500 hover:text-indigo-600 hover:border-gray-300 shrink-0">Spielauswertung</button>
+                <button id="tab-spieler" class="tab-btn px-3 py-3 font-medium text-sm border-b-2 border-transparent text-gray-500 hover:text-indigo-600 hover:border-gray-300 shrink-0">Spieler-Profile</button>
+                <button id="tab-h2h" class="tab-btn px-3 py-3 font-medium text-sm border-b-2 border-transparent text-gray-500 hover:text-indigo-600 hover:border-gray-300 shrink-0">H2H-Vergleich</button>
             </nav>
         </div>
 
         <main>
             <div id="view-eingabe" class="view">
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 id="eingabe-title" class="text-2xl font-bold">Neues Spiel hinzufügen</h2>
-                        <button id="process-and-save-btn" class="bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-transform transform hover:scale-105">
-                            Spiel analysieren & hinzufügen
+                <div class="bg-white p-4 sm:p-6 rounded-lg shadow-md">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
+                        <h2 id="eingabe-title" class="text-xl sm:text-2xl font-bold">Neues Spiel hinzufügen</h2>
+                        <button id="process-and-save-btn" class="w-full sm:w-auto bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-transform transform hover:scale-105 shrink-0">
+                            <span class="sm:hidden">Analysieren & Speichern</span>
+                            <span class="hidden sm:inline">Spiel analysieren & hinzufügen</span>
                         </button>
                     </div>
-                    <p class="mb-4 text-gray-600">Kopiere den kompletten "Presseinformation - lang" Text aus handball4all hier hinein.</p>
+                    <p class="mb-4 text-gray-600 text-sm sm:text-base">Kopiere den kompletten "Presseinformation - lang" Text aus handball4all hier hinein.</p>
                     <textarea id="game-data-input" rows="15" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" placeholder="Hier die Spieldaten einfügen..."></textarea>
                     <button id="cancel-edit-btn" class="mt-4 w-full bg-gray-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition">
                         Abbrechen
@@ -121,22 +122,24 @@
             </div>
 
             <div id="view-archiv" class="view">
-                <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="bg-white p-4 sm:p-6 rounded-lg shadow-md">
                     <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-4 gap-4">
                         <h2 class="text-2xl font-bold shrink-0">Archivierte Spiele</h2>
-                        <div class="flex-grow flex flex-col sm:flex-row gap-4 items-center">
-                            <input type="text" id="archive-search-input" placeholder="Nach Team filtern..." class="p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 w-full sm:w-auto sm:flex-grow">
-                            <button id="show-eingabe-view-btn" class="bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700 transition-transform transform hover:scale-105 w-full sm:w-auto">
-                                Neues Spiel
-                            </button>
-                            <div class="flex items-center space-x-2">
-                                <button id="export-btn" title="Alle Spiele exportieren" class="p-2 rounded-full bg-blue-500 text-white hover:bg-blue-600 transition">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                        <div class="w-full flex flex-col sm:flex-row gap-4 items-center">
+                            <input type="text" id="archive-search-input" placeholder="Nach Team filtern..." class="p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 w-full sm:flex-grow">
+                            <div class="w-full sm:w-auto flex gap-2 justify-end">
+                                <button id="show-eingabe-view-btn" class="bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700 transition-transform transform hover:scale-105 w-full sm:w-auto">
+                                    Neues Spiel
                                 </button>
-                                <button id="import-btn" title="Spiele importieren" class="p-2 rounded-full bg-green-500 text-white hover:bg-green-600 transition">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
-                                </button>
-                                <input type="file" id="import-file-input" class="hidden" accept=".json">
+                                <div class="flex items-center space-x-2">
+                                    <button id="export-btn" title="Alle Spiele exportieren" class="p-2 rounded-full bg-blue-500 text-white hover:bg-blue-600 transition">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                                    </button>
+                                    <button id="import-btn" title="Spiele importieren" class="p-2 rounded-full bg-green-500 text-white hover:bg-green-600 transition">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
+                                    </button>
+                                    <input type="file" id="import-file-input" class="hidden" accept=".json">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -151,36 +154,38 @@
                     <p class="text-gray-500">Bitte wähle zuerst ein Spiel aus dem Archiv aus, um die Details anzuzeigen.</p>
                 </div>
                 <div id="spielauswertung-content" style="display: none;">
-                    <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="bg-white p-4 sm:p-6 rounded-lg shadow-md">
                         <div id="game-detail-header" class="flex justify-between items-start mb-4 flex-wrap gap-4">
                             <div>
-                                <h2 id="game-detail-title" class="text-2xl font-bold">Spieldetails</h2>
+                                <h2 id="game-detail-title" class="text-xl sm:text-2xl font-bold">Spieldetails</h2>
                                 <p id="game-detail-subtitle" class="text-gray-600"></p>
                             </div>
                         </div>
 
-                        <div class="my-6 p-4 bg-gray-50 rounded-lg flex items-center justify-between gap-4">
-                            <button id="prev-game-btn" class="p-2 rounded-md hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <div class="my-6 p-4 bg-gray-50 rounded-lg flex items-center justify-between gap-2 sm:gap-4">
+                            <button id="prev-game-btn" class="p-2 rounded-md hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed shrink-0">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
                             </button>
-                            <select id="game-nav-select" class="flex-grow p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"></select>
-                            <button id="next-game-btn" class="p-2 rounded-md hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                            <div class="flex-1 min-w-0">
+                                <select id="game-nav-select" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm truncate"></select>
+                            </div>
+                            <button id="next-game-btn" class="p-2 rounded-md hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed shrink-0">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" /></svg>
                             </button>
                         </div>
 
                         <div class="border-b border-gray-200 mb-6">
-                            <nav class="-mb-px flex space-x-4" aria-label="Tabs">
-                                <button id="detail-tab-tabular" class="detail-tab-btn whitespace-nowrap py-3 px-4 border-b-2 font-medium text-sm">Tabellarische Auswertung</button>
-                                <button id="detail-tab-graphical" class="detail-tab-btn whitespace-nowrap py-3 px-4 border-b-2 font-medium text-sm">Grafische Auswertung</button>
+                            <nav class="-mb-px flex space-x-4 overflow-x-auto" aria-label="Tabs">
+                                <button id="detail-tab-tabular" class="detail-tab-btn whitespace-nowrap py-3 px-4 border-b-2 font-medium text-sm">Tabellarisch</button>
+                                <button id="detail-tab-graphical" class="detail-tab-btn whitespace-nowrap py-3 px-4 border-b-2 font-medium text-sm">Grafisch</button>
                             </nav>
                         </div>
 
                         <div id="detail-content-graphical" class="detail-view-content">
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div class="md:col-span-2 space-y-6">
-                                    <div class="p-4 bg-gray-50 rounded-lg"><canvas id="score-chart"></canvas></div>
-                                    <div class="p-4 bg-gray-50 rounded-lg"><canvas id="scoring-run-chart"></canvas></div>
+                            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                                <div class="lg:col-span-2 space-y-6">
+                                    <div class="p-2 sm:p-4 bg-gray-50 rounded-lg"><canvas id="score-chart"></canvas></div>
+                                    <div class="p-2 sm:p-4 bg-gray-50 rounded-lg"><canvas id="scoring-run-chart"></canvas></div>
                                 </div>
                                 <div class="p-4 bg-gray-50 rounded-lg">
                                     <h3 class="font-bold mb-2 text-gray-700">Torschützen</h3>
@@ -190,9 +195,9 @@
                         </div>
 
                         <div id="detail-content-tabular" class="detail-view-content">
-                             <div class="flex justify-between items-center mb-6 flex-wrap gap-4">
-                                <div><h2 class="text-2xl font-bold">Tabellarische Auswertung</h2></div>
-                                <button id="correct-names-btn" class="bg-purple-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-purple-600 transition">Namen korrigieren</button>
+                             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 flex-wrap gap-4">
+                                <div><h2 class="text-xl sm:text-2xl font-bold">Tabellarische Auswertung</h2></div>
+                                <button id="correct-names-btn" class="w-full sm:w-auto bg-purple-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-purple-600 transition">Namen korrigieren</button>
                             </div>
                             <div id="tabular-content-container" class="space-y-8"></div>
                         </div>
@@ -201,7 +206,7 @@
             </div>
 
             <div id="view-statistik" class="view">
-                <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="bg-white p-4 sm:p-6 rounded-lg shadow-md">
                     <h2 class="text-2xl font-bold mb-4">Team-Statistiken</h2>
                     <div class="mb-6">
                         <label for="team-select" class="block text-sm font-medium text-gray-700 mb-2">Team für die Analyse auswählen:</label>
@@ -214,7 +219,7 @@
             </div>
 
             <div id="view-spieler" class="view">
-                <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="bg-white p-4 sm:p-6 rounded-lg shadow-md">
                     <h2 class="text-2xl font-bold mb-4">Spieler-Profile</h2>
                     
                     <div class="mb-6">
@@ -229,8 +234,7 @@
                             </div>
                         </div>
                         <div id="player-card-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 max-h-96 overflow-y-auto p-2 bg-gray-50 rounded-lg">
-                            <!-- Player cards will be injected here -->
-                        </div>
+                            </div>
                     </div>
 
                     <div id="player-profile-container" class="space-y-8">
@@ -240,14 +244,14 @@
             </div>
 
             <div id="view-h2h" class="view">
-                <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="bg-white p-4 sm:p-6 rounded-lg shadow-md">
                     <h2 class="text-2xl font-bold mb-4">Head-to-Head (H2H) Vergleich</h2>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
-                        <div>
+                        <div class="md:col-span-1">
                             <label for="h2h-team1-select" class="block text-sm font-medium text-gray-700 mb-1">Team 1</label>
                             <select id="h2h-team1-select" class="w-full p-2 border border-gray-300 rounded-lg"></select>
                         </div>
-                        <div>
+                        <div class="md:col-span-1">
                             <label for="h2h-team2-select" class="block text-sm font-medium text-gray-700 mb-1">Team 2</label>
                             <select id="h2h-team2-select" class="w-full p-2 border border-gray-300 rounded-lg"></select>
                         </div>
@@ -261,7 +265,7 @@
         
         <footer class="text-center text-sm text-gray-500 mt-12 pb-4">
             <p>Handball Statistik by Carsten | Version <span id="app-version"></span></p>
-            <div id="connection-status-container" class="flex items-center justify-center space-x-2 mt-2 hover:bg-gray-200 p-2 rounded-md transition">
+            <div id="connection-status-container" class="inline-flex items-center justify-center space-x-2 mt-2 hover:bg-gray-200 p-2 rounded-md transition">
                 <div id="connection-status-dot" class="w-3 h-3 rounded-full status-dot-unknown transition-colors"></div>
                 <span id="connection-status-text" class="text-sm text-gray-600">Verbindungsstatus unbekannt</span>
             </div>
@@ -272,13 +276,11 @@
         <div class="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full mx-4">
             <h3 class="text-lg font-bold mb-4">Spielernamen korrigieren</h3>
             <div id="name-correction-list" class="space-y-2 max-h-96 overflow-y-auto mb-6"></div>
-            <div class="flex justify-between space-x-4">
-                <div>
-                   <button id="name-correction-revert-ui" class="bg-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-600">Originale wiederherstellen</button>
-                </div>
-                <div class="flex space-x-4">
+            <div class="flex flex-col sm:flex-row justify-between space-y-2 sm:space-y-0 sm:space-x-4">
+                <button id="name-correction-revert-ui" class="bg-gray-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-600">Originale wiederherstellen</button>
+                <div class="flex justify-end space-x-4">
                     <button id="name-correction-cancel" class="bg-gray-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-700">Abbrechen</button>
-                    <button id="name-correction-save" class="bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700">Korrekturen speichern</button>
+                    <button id="name-correction-save" class="bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700">Speichern</button>
                 </div>
             </div>
         </div>
@@ -296,10 +298,10 @@
     </div>
 
     <div id="connection-details-modal" class="modal">
-        <div class="bg-white p-8 rounded-lg shadow-xl max-w-lg w-full mx-4">
+        <div class="bg-white p-6 sm:p-8 rounded-lg shadow-xl max-w-lg w-full mx-4">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-xl font-bold">Verbindungsdetails</h3>
-                <button id="connection-modal-close-btn" class="text-gray-500 hover:text-gray-800">&times;</button>
+                <button id="connection-modal-close-btn" class="text-gray-500 hover:text-gray-800 text-3xl leading-none">&times;</button>
             </div>
             <div class="space-y-3 text-sm">
                 <div class="flex justify-between border-b pb-2">
@@ -308,15 +310,15 @@
                 </div>
                 <div class="flex justify-between border-b pb-2">
                     <span class="font-semibold text-gray-600">App ID:</span>
-                    <span id="modal-app-id" class="font-mono break-all">-</span>
+                    <span id="modal-app-id" class="font-mono break-all text-right">-</span>
                 </div>
                 <div class="flex justify-between border-b pb-2">
                     <span class="font-semibold text-gray-600">User ID:</span>
-                    <span id="modal-user-id" class="font-mono break-all">-</span>
+                    <span id="modal-user-id" class="font-mono break-all text-right">-</span>
                 </div>
                  <div class="flex justify-between border-b pb-2">
                     <span class="font-semibold text-gray-600">Datenbank-Pfad:</span>
-                    <span id="modal-db-path" class="font-mono break-all">-</span>
+                    <span id="modal-db-path" class="font-mono break-all text-right">-</span>
                 </div>
             </div>
         </div>
@@ -332,7 +334,7 @@
         import { getFirestore, doc, setDoc, updateDoc, deleteDoc, onSnapshot, collection, writeBatch } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
         
         // --- CONFIG & INITIALIZATION ---
-        const APP_VERSION = "4.5.0-revert-ui";
+        const APP_VERSION = "4.5.8-final-final-7m-fix";
 
         // Firebase instances
         let app, db, auth;
@@ -429,7 +431,6 @@
         const h2hTeam1Select = document.getElementById('h2h-team1-select');
         const h2hTeam2Select = document.getElementById('h2h-team2-select');
         const h2hCompareBtn = document.getElementById('h2h-compare-btn');
-        const h2hResultsContainer = document.getElementById('h2h-results-container');
         const connectionDetailsModal = document.getElementById('connection-details-modal');
         const connectionModalCloseBtn = document.getElementById('connection-modal-close-btn');
         const modalConnectionStatus = document.getElementById('modal-connection-status');
@@ -458,23 +459,21 @@
             nameCorrectionSaveBtn.addEventListener('click', saveNameCorrections);
             nameCorrectionCancelBtn.addEventListener('click', () => nameCorrectionModal.classList.remove('flex'));
             nameCorrectionRevertUIBtn.addEventListener('click', () => {
-                const inputs = nameCorrectionList.querySelectorAll('input[data-original-name]');
-                inputs.forEach(input => {
-                    input.value = input.dataset.originalName;
-                });
-                showNotification('Änderungen im Formular zurückgesetzt.', 'info');
+                 const inputs = nameCorrectionList.querySelectorAll('input[data-original-name]');
+                 inputs.forEach(input => {
+                     input.value = input.dataset.originalName;
+                 });
+                 showNotification('Änderungen im Formular zurückgesetzt.', 'info');
             });
             
-            nameCorrectionList.addEventListener('click', (event) => {
-                if (event.target.classList.contains('kadername-btn')) {
-                    const button = event.target;
-                    const playerNumber = button.dataset.playerNumber;
-                    const standardName = STANDARD_ROSTER_SGBD[playerNumber];
-                    if (standardName) {
-                        const inputField = button.closest('.player-correction-item').querySelector('input');
-                        if (inputField) inputField.value = standardName;
-                    } else {
-                        showNotification(`Kein Kadername für Spieler #${playerNumber} gefunden.`, 'info');
+            nameCorrectionList.addEventListener('change', (event) => {
+                if (event.target.classList.contains('roster-select')) {
+                    const select = event.target;
+                    const originalName = select.dataset.inputForOriginalName;
+                    const selectedValue = select.value;
+                    const inputField = nameCorrectionList.querySelector(`input[data-original-name="${originalName}"]`);
+                    if (inputField && selectedValue) {
+                        inputField.value = selectedValue;
                     }
                 }
             });
@@ -489,9 +488,9 @@
             });
 
             gameArchiveList.addEventListener('click', (event) => {
-                const gameButton = event.target.closest('.game-entry-btn');
                 const deleteButton = event.target.closest('.delete-game-btn');
                 const editButton = event.target.closest('.edit-game-btn');
+                const gameButton = event.target.closest('.game-entry-btn');
 
                 if (deleteButton) {
                     event.stopPropagation();
@@ -502,7 +501,10 @@
                     const gameId = editButton.dataset.gameId;
                     startEditing(gameId);
                 } else if (gameButton) {
-                    renderGameDetail(gameButton.dataset.gameId, true);
+                    const gameId = gameButton.dataset.gameId;
+                    if (gameId) {
+                       renderGameDetail(gameId, true);
+                    }
                 }
             });
 
@@ -607,7 +609,7 @@
             gameDataInput.value = gameToEdit.rawText;
             
             eingabeTitle.textContent = `Spiel bearbeiten (ID: ${gameId})`;
-            processBtn.textContent = 'Änderungen speichern';
+            processBtn.innerHTML = '<span class="sm:hidden">Änderungen speichern</span><span class="hidden sm:inline">Änderungen speichern</span>';
             processBtn.classList.remove('bg-indigo-600', 'hover:bg-indigo-700');
             processBtn.classList.add('bg-green-600', 'hover:bg-green-700');
             cancelBtn.style.display = 'block';
@@ -625,7 +627,7 @@ Ergebnis 30:25 (15:12)
             inputStatus.innerHTML = '';
             
             eingabeTitle.textContent = 'Neues Spiel hinzufügen';
-            processBtn.textContent = 'Spiel analysieren & hinzufügen';
+            processBtn.innerHTML = '<span class="sm:hidden">Analysieren & Speichern</span><span class="hidden sm:inline">Spiel analysieren & hinzufügen</span>';
             processBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
             processBtn.classList.add('bg-indigo-600', 'hover:bg-indigo-700');
             cancelBtn.style.display = 'block';
@@ -709,7 +711,10 @@ Ergebnis 30:25 (15:12)
                 if (timeStampCount > 0) warnings = 1;
                 if (timeStampCount > 1) suspensions = timeStampCount - 1;
                 if (nameEndIndex > 1 && /\d+\/\d+/.test(parts[nameEndIndex - 1])) {
-                    [sevenMeterGoals, sevenMetersAttempted] = parts[nameEndIndex - 1].split('/').map(Number);
+                    // Corrected based on user feedback: The format is Versuche/Tore (Attempts/Goals).
+                    const sevenMeterStats = parts[nameEndIndex - 1].split('/');
+                    sevenMetersAttempted = parseInt(sevenMeterStats[0], 10);
+                    sevenMeterGoals = parseInt(sevenMeterStats[1], 10);
                     nameEndIndex--;
                 }
                 if (nameEndIndex > 1 && /^\d+$/.test(parts[nameEndIndex - 1])) {
@@ -876,7 +881,10 @@ Ergebnis 30:25 (15:12)
                     switchView('spielauswertung');
                 }
             } else {
-                 switchView(document.querySelector('.tab-active').id.replace('tab-',''));
+                 const activeTabEl = document.querySelector('.tab-active');
+                 if (activeTabEl) {
+                    switchView(activeTabEl.id.replace('tab-',''));
+                 }
             }
         }
 
@@ -901,16 +909,31 @@ Ergebnis 30:25 (15:12)
                         const correctedName = getCorrectedName(game, originalName);
                         const div = document.createElement('div');
                         div.className = 'player-correction-item space-y-1 py-2 border-t first:border-t-0';
-                        let buttonHtml = '';
-                        if (teamName === SG_BUENDE_DUENNE && STANDARD_ROSTER_SGBD[player.number]) {
-                            buttonHtml = `<button class="kadername-btn bg-blue-500 text-white text-xs px-2 py-1 rounded hover:bg-blue-600 ml-2" data-player-number="${player.number}">Kadername</button>`;
+                        
+                        let rosterSelectHtml = '';
+                        if (teamName === SG_BUENDE_DUENNE) {
+                            const standardNameForNumber = STANDARD_ROSTER_SGBD[player.number];
+                            const optionsHtml = Object.values(STANDARD_ROSTER_SGBD)
+                                .map(name => {
+                                    const isSelected = name === standardNameForNumber ? 'selected' : '';
+                                    return `<option value="${name}" ${isSelected}>${name}</option>`;
+                                })
+                                .join('');
+
+                            rosterSelectHtml = `
+                                <select class="roster-select w-full p-1 mt-1 border border-gray-200 rounded-md bg-gray-50 text-sm" data-input-for-original-name="${originalName}">
+                                    <option value="">-- Aus Kader wählen --</option>
+                                    ${optionsHtml}
+                                </select>
+                            `;
                         }
+                        
                         div.innerHTML = `
                             <div>
                                 <label class="text-gray-600 font-medium truncate" title="${originalName}">${originalName}</label>
-                                ${buttonHtml}
                             </div>
                             <input type="text" value="${correctedName}" data-original-name="${originalName}" class="p-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                             ${rosterSelectHtml}
                         `;
                         nameCorrectionList.appendChild(div);
                     });
@@ -949,38 +972,6 @@ Ergebnis 30:25 (15:12)
                 showNotification("Die Korrekturen konnten nicht gespeichert werden.", 'error');
             }
         }
-
-        async function resetNameCorrections(gameId) {
-            if (!isAuthReady || !gamesCollectionRef) {
-                showNotification("Datenbank ist nicht bereit.", "error");
-                return;
-            }
-            const gameToReset = allGames.find(g => g.id === gameId);
-            if (!gameToReset) {
-                showNotification("Spiel nicht gefunden.", "error");
-                return;
-            }
-
-            const originalGameData = parseGameReport(gameToReset.rawText);
-            if (!originalGameData) {
-                showNotification("Fehler beim Wiederherstellen der Originaldaten.", "error");
-                return;
-            }
-            
-            originalGameData.rawText = gameToReset.rawText;
-            
-            try {
-                const gameDocRef = doc(gamesCollectionRef, gameId);
-                await setDoc(gameDocRef, originalGameData); 
-                
-                nameCorrectionModal.classList.remove('flex');
-                showNotification("Namenskorrekturen erfolgreich zurückgesetzt.", 'success');
-            } catch (error) {
-                console.error("Fehler beim Zurücksetzen der Namen in Firestore:", error);
-                showNotification("Die Namen konnten nicht zurückgesetzt werden.", 'error');
-            }
-        }
-
 
         // --- IMPORT / EXPORT ---
         function exportGames() {
@@ -1052,25 +1043,30 @@ Ergebnis 30:25 (15:12)
                 gameArchiveList.innerHTML = `<p class="text-gray-500">Keine Spiele gefunden.</p>`;
                 return;
             }
-            gameArchiveList.innerHTML = filteredGames.map(game => `
-                <button data-game-id="${game.id}" class="game-entry-btn w-full text-left border border-gray-200 p-4 rounded-lg hover:bg-gray-50 hover:border-indigo-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
-                    <div class="flex justify-between items-center pointer-events-none">
-                        <div>
-                            <p class="font-bold text-lg">${getCorrectedName(game, game.homeTeam)} vs ${getCorrectedName(game, game.guestTeam)}</p>
-                            <p class="text-sm text-gray-500">Datum: ${game.date} | ID: ${game.id}</p>
+            gameArchiveList.innerHTML = filteredGames.map(game => {
+                const homeTeam = getCorrectedName(game, game.homeTeam);
+                const guestTeam = getCorrectedName(game, game.guestTeam);
+                return `
+                <div data-game-id="${game.id}" class="game-entry-btn border border-gray-200 p-3 rounded-lg hover:bg-gray-50 hover:border-indigo-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition cursor-pointer">
+                    <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2">
+                        <div class="flex-grow">
+                            <p class="font-bold text-base sm:text-lg">${homeTeam} vs ${guestTeam}</p>
+                            <p class="text-xs sm:text-sm text-gray-500">Datum: ${game.date} | ID: ${game.id}</p>
                         </div>
-                        <div class="flex items-center space-x-4">
-                            <p class="text-2xl font-bold text-indigo-600">${game.finalScore}</p>
-                            <div data-game-id="${game.id}" class="edit-game-btn text-gray-400 hover:text-yellow-500 p-2 rounded-full hover:bg-yellow-100 pointer-events-auto" title="Spiel bearbeiten">
-                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
-                            </div>
-                            <div data-game-id="${game.id}" class="delete-game-btn text-gray-400 hover:text-red-500 p-2 rounded-full hover:bg-red-100 pointer-events-auto" title="Spiel löschen">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                            </div>
+                        <div class="flex items-center justify-between w-full sm:w-auto">
+                             <p class="text-xl sm:text-2xl font-bold text-indigo-600">${game.finalScore}</p>
+                             <div class="flex items-center space-x-2 ml-4">
+                                <div data-game-id="${game.id}" class="edit-game-btn text-gray-400 hover:text-yellow-500 p-2 rounded-full hover:bg-yellow-100" title="Spiel bearbeiten">
+                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+                                </div>
+                                <div data-game-id="${game.id}" class="delete-game-btn text-gray-400 hover:text-red-500 p-2 rounded-full hover:bg-red-100" title="Spiel löschen">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                </div>
+                             </div>
                         </div>
                     </div>
-                </button>
-            `).join('');
+                </div>
+            `}).join('');
         }
         
         const playerColors = {};
@@ -1132,7 +1128,7 @@ Ergebnis 30:25 (15:12)
                         backgroundColor: 'rgba(220, 38, 38, 0.5)', borderColor: 'rgba(220, 38, 38, 1)',
                         stepped: true, fill: true, pointRadius: 0,
                     } ] },
-                options: { responsive: true, plugins: {
+                options: { responsive: true, maintainAspectRatio: false, plugins: {
                     title: { display: true, text: 'Tor-Rhythmus (Läufe)' },
                     tooltip: { callbacks: {
                         title: function(context) {
@@ -1181,7 +1177,7 @@ Ergebnis 30:25 (15:12)
                 } ];
             scoreChart = new Chart(scoreChartCanvas, {
                 type: 'line', data: { datasets },
-                options: { responsive: true, plugins: {
+                options: { responsive: true, maintainAspectRatio: false, plugins: {
                     legend: { position: 'top', labels: { filter: item => item.datasetIndex < 2 } },
                     title: { display: true, text: 'Spielverlauf' },
                     tooltip: { callbacks: {
@@ -1335,18 +1331,18 @@ Ergebnis 30:25 (15:12)
 
             const sortedPlayers = Object.values(playerAggregatedStats).sort((a,b) => b.goals - a.goals);
             statsContainer.innerHTML = `
-                <div class="bg-gray-50 p-6 rounded-lg border">
+                <div class="bg-gray-50 p-4 sm:p-6 rounded-lg border">
                     <h3 class="text-xl font-bold mb-4 text-indigo-700">Team-Übersicht: ${selectedTeam}</h3>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-                        <div class="bg-white p-4 rounded-lg shadow"><p class="text-3xl font-bold">${totalGames}</p><p class="text-sm text-gray-500">Spiele</p></div>
-                        <div class="bg-white p-4 rounded-lg shadow"><p class="text-3xl font-bold text-green-600">${wins}</p><p class="text-sm text-gray-500">Siege</p></div>
-                        <div class="bg-white p-4 rounded-lg shadow"><p class="text-3xl font-bold text-red-600">${losses}</p><p class="text-sm text-gray-500">Niederlagen</p></div>
-                        <div class="bg-white p-4 rounded-lg shadow"><p class="text-3xl font-bold text-yellow-600">${draws}</p><p class="text-sm text-gray-500">Unentschieden</p></div>
-                        <div class="bg-white p-4 rounded-lg shadow col-span-2"><p class="text-3xl font-bold">${goalsScored} : ${goalsConceded}</p><p class="text-sm text-gray-500">Torverhältnis</p></div>
-                        <div class="bg-white p-4 rounded-lg shadow col-span-2"><p class="text-3xl font-bold">${totalGames > 0 ? (goalsScored / totalGames).toFixed(2) : '0.00'}</p><p class="text-sm text-gray-500">Tore pro Spiel</p></div>
+                        <div class="bg-white p-3 sm:p-4 rounded-lg shadow"><p class="text-2xl sm:text-3xl font-bold">${totalGames}</p><p class="text-xs sm:text-sm text-gray-500">Spiele</p></div>
+                        <div class="bg-white p-3 sm:p-4 rounded-lg shadow"><p class="text-2xl sm:text-3xl font-bold text-green-600">${wins}</p><p class="text-xs sm:text-sm text-gray-500">Siege</p></div>
+                        <div class="bg-white p-3 sm:p-4 rounded-lg shadow"><p class="text-2xl sm:text-3xl font-bold text-red-600">${losses}</p><p class="text-xs sm:text-sm text-gray-500">Niederlagen</p></div>
+                        <div class="bg-white p-3 sm:p-4 rounded-lg shadow"><p class="text-2xl sm:text-3xl font-bold text-yellow-600">${draws}</p><p class="text-xs sm:text-sm text-gray-500">Unentschieden</p></div>
+                        <div class="bg-white p-3 sm:p-4 rounded-lg shadow col-span-2"><p class="text-2xl sm:text-3xl font-bold">${goalsScored} : ${goalsConceded}</p><p class="text-xs sm:text-sm text-gray-500">Torverhältnis</p></div>
+                        <div class="bg-white p-3 sm:p-4 rounded-lg shadow col-span-2"><p class="text-2xl sm:text-3xl font-bold">${totalGames > 0 ? (goalsScored / totalGames).toFixed(2) : '0.00'}</p><p class="text-xs sm:text-sm text-gray-500">Tore pro Spiel</p></div>
                     </div>
                     <div class="mt-6">
-                        <h4 class="font-semibold mb-2">Sieg-Verhältnis</h4>
+                        <h4 class="font-semibold mb-2 text-sm">Sieg-Verhältnis</h4>
                         <div class="w-full bg-gray-200 rounded-full h-6 flex overflow-hidden">
                             <div class="bg-green-500 h-full text-white text-xs flex items-center justify-center" style="width: ${winPercentage}%" title="Siege: ${wins}">${Math.round(winPercentage)}%</div>
                             <div class="bg-yellow-500 h-full text-white text-xs flex items-center justify-center" style="width: ${drawPercentage}%" title="Unentschieden: ${draws}">${Math.round(drawPercentage)}%</div>
@@ -1354,37 +1350,37 @@ Ergebnis 30:25 (15:12)
                         </div>
                     </div>
                      <div class="mt-6">
-                        <h4 class="font-semibold mb-2">7-Meter Quote (${total7mGoals}/${total7mAttempts})</h4>
+                        <h4 class="font-semibold mb-2 text-sm">7-Meter Quote (${total7mGoals}/${total7mAttempts})</h4>
                         <div class="w-full bg-gray-200 rounded-full h-6">
                             <div class="bg-blue-500 h-full rounded-full text-white text-xs flex items-center justify-center" style="width: ${sevenMeterQuote}%">${sevenMeterQuote}%</div>
                         </div>
                     </div>
                 </div>
-                <div class="bg-gray-50 p-6 rounded-lg border">
+                <div class="bg-gray-50 p-4 sm:p-6 rounded-lg border">
                     <h3 class="text-xl font-bold mb-4 text-indigo-700">Spieler-Statistiken</h3>
                     <div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-100">
                                 <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Spieler</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Spiele</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tore</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tore / Spiel</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">7m Quote</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" title="Verwarnungen">Verw.</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" title="2-Minuten-Strafen">2-Min</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Spieler</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sp.</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tore</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">T/S</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">7m</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" title="Verwarnungen">V</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" title="2-Minuten-Strafen">2'</th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 ${sortedPlayers.map(p => `
                                     <tr>
-                                        <td class="px-6 py-4 whitespace-nowrap font-medium clickable-player" data-player-name="${p.name}">${p.name}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap">${p.games}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap font-bold">${p.goals}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap">${p.games > 0 ? (p.goals / p.games).toFixed(2) : '0.00'}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap">${p.sevenMeterGoals} / ${p.sevenMetersAttempted}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap">${p.warnings}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap">${p.suspensions}</td>
+                                        <td class="px-4 py-4 whitespace-nowrap font-medium clickable-player" data-player-name="${p.name}">${p.name}</td>
+                                        <td class="px-4 py-4 whitespace-nowrap">${p.games}</td>
+                                        <td class="px-4 py-4 whitespace-nowrap font-bold">${p.goals}</td>
+                                        <td class="px-4 py-4 whitespace-nowrap">${p.games > 0 ? (p.goals / p.games).toFixed(2) : '0.00'}</td>
+                                        <td class="px-4 py-4 whitespace-nowrap">${p.sevenMeterGoals}/${p.sevenMetersAttempted}</td>
+                                        <td class="px-4 py-4 whitespace-nowrap">${p.warnings}</td>
+                                        <td class="px-4 py-4 whitespace-nowrap">${p.suspensions}</td>
                                     </tr>
                                 `).join('')}
                             </tbody>
@@ -1513,29 +1509,31 @@ Ergebnis 30:25 (15:12)
             const sevenMeterQuote = stats.sevenMetersAttempted > 0 ? ((stats.sevenMeterGoals / stats.sevenMetersAttempted) * 100).toFixed(1) : '0';
 
             let html = `
-                <div class="bg-gray-50 p-6 rounded-lg border">
+                <div class="bg-gray-50 p-4 sm:p-6 rounded-lg border">
                     <h3 class="text-xl font-bold mb-4 text-indigo-700">${playerName}</h3>
-                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 text-center">
-                        <div class="bg-white p-4 rounded-lg shadow"><p class="text-3xl font-bold">${stats.games}</p><p class="text-sm text-gray-500">Spiele</p></div>
-                        <div class="bg-white p-4 rounded-lg shadow"><p class="text-3xl font-bold">${stats.goals}</p><p class="text-sm text-gray-500">Tore</p></div>
-                        <div class="bg-white p-4 rounded-lg shadow"><p class="text-3xl font-bold">${goalsPerGame}</p><p class="text-sm text-gray-500">Tore/Spiel</p></div>
-                        <div class="bg-white p-4 rounded-lg shadow"><p class="text-3xl font-bold">${sevenMeterQuote}%</p><p class="text-sm text-gray-500">7m Quote</p></div>
-                        <div class="bg-white p-4 rounded-lg shadow"><p class="text-3xl font-bold">${stats.warnings}</p><p class="text-sm text-gray-500">Verwarn.</p></div>
-                        <div class="bg-white p-4 rounded-lg shadow"><p class="text-3xl font-bold">${stats.suspensions}</p><p class="text-sm text-gray-500">2-Min</p></div>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 text-center">
+                        <div class="bg-white p-3 rounded-lg shadow"><p class="text-2xl font-bold">${stats.games}</p><p class="text-xs text-gray-500">Spiele</p></div>
+                        <div class="bg-white p-3 rounded-lg shadow"><p class="text-2xl font-bold">${stats.goals}</p><p class="text-xs text-gray-500">Tore</p></div>
+                        <div class="bg-white p-3 rounded-lg shadow"><p class="text-2xl font-bold">${goalsPerGame}</p><p class="text-xs text-gray-500">Tore/Spiel</p></div>
+                        <div class="bg-white p-3 rounded-lg shadow"><p class="text-2xl font-bold">${sevenMeterQuote}%</p><p class="text-sm text-gray-500">7m (${stats.sevenMeterGoals}/${stats.sevenMetersAttempted})</p></div>
+                        <div class="bg-white p-3 rounded-lg shadow"><p class="text-2xl font-bold">${stats.warnings}</p><p class="text-xs text-gray-500">Verwarn.</p></div>
+                        <div class="bg-white p-3 rounded-lg shadow"><p class="text-2xl font-bold">${stats.suspensions}</p><p class="text-xs text-gray-500">2-Min</p></div>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
-                    <div class="bg-gray-50 p-6 rounded-lg border">
+                    <div class="bg-gray-50 p-4 sm:p-6 rounded-lg border">
                         <h3 class="text-xl font-bold mb-4 text-indigo-700">Tor-Verlauf</h3>
-                        <canvas id="player-profile-chart"></canvas>
+                        <div class="relative h-64">
+                           <canvas id="player-profile-chart"></canvas>
+                        </div>
                     </div>
-                    <div class="bg-gray-50 p-6 rounded-lg border">
+                    <div class="bg-gray-50 p-4 sm:p-6 rounded-lg border">
                          <h3 class="text-xl font-bold mb-4 text-indigo-700">Spieleliste</h3>
-                         <div class="overflow-y-auto max-h-96">
+                         <div class="overflow-y-auto max-h-80">
                              <table class="min-w-full">
-                                 <thead class="bg-gray-200 sticky top-0"><tr><th class="px-4 py-2 text-left">Datum</th><th class="px-4 py-2 text-left">Gegner</th><th class="px-4 py-2 text-left">Tore</th></tr></thead>
+                                 <thead class="bg-gray-200 sticky top-0"><tr><th class="px-4 py-2 text-left text-sm">Datum</th><th class="px-4 py-2 text-left text-sm">Gegner</th><th class="px-4 py-2 text-left text-sm">Tore</th></tr></thead>
                                  <tbody class="divide-y">
-                                 ${gamesWithPlayer.map(g => `<tr><td class="px-4 py-2">${g.date}</td><td class="px-4 py-2">${g.opponent}</td><td class="px-4 py-2 font-bold">${g.goals}</td></tr>`).join('')}
+                                 ${gamesWithPlayer.map(g => `<tr><td class="px-4 py-2 text-sm">${g.date}</td><td class="px-4 py-2 text-sm">${g.opponent}</td><td class="px-4 py-2 font-bold text-sm">${g.goals}</td></tr>`).join('')}
                                  </tbody>
                              </table>
                          </div>
@@ -1561,6 +1559,8 @@ Ergebnis 30:25 (15:12)
                         }]
                     },
                     options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
                         scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
                     }
                 });
@@ -1640,35 +1640,35 @@ Ergebnis 30:25 (15:12)
             const avgGoals2 = (team2Goals / matchups.length).toFixed(2);
 
             let html = `
-                <div class="text-center bg-gray-50 p-6 rounded-lg">
-                    <h3 class="text-2xl font-bold">${team1} vs ${team2}</h3>
+                <div class="text-center bg-gray-50 p-4 sm:p-6 rounded-lg">
+                    <h3 class="text-xl sm:text-2xl font-bold">${team1} vs ${team2}</h3>
                     <div class="mt-4 grid grid-cols-3 gap-4">
                         <div>
-                            <p class="text-4xl font-bold text-green-600">${team1Wins}</p>
-                            <p class="text-sm text-gray-600">Siege ${team1}</p>
+                            <p class="text-3xl sm:text-4xl font-bold text-green-600">${team1Wins}</p>
+                            <p class="text-xs sm:text-sm text-gray-600">Siege ${team1}</p>
                         </div>
                         <div>
-                            <p class="text-4xl font-bold text-yellow-600">${draws}</p>
-                            <p class="text-sm text-gray-600">Unentschieden</p>
+                            <p class="text-3xl sm:text-4xl font-bold text-yellow-600">${draws}</p>
+                            <p class="text-xs sm:text-sm text-gray-600">Unentschieden</p>
                         </div>
                         <div>
-                            <p class="text-4xl font-bold text-green-600">${team2Wins}</p>
-                            <p class="text-sm text-gray-600">Siege ${team2}</p>
+                            <p class="text-3xl sm:text-4xl font-bold text-green-600">${team2Wins}</p>
+                            <p class="text-xs sm:text-sm text-gray-600">Siege ${team2}</p>
                         </div>
                     </div>
                      <div class="mt-4 grid grid-cols-2 gap-4 border-t pt-4">
-                        <div><p class="text-xl font-bold">${avgGoals1}</p><p>Ø Tore ${team1}</p></div>
-                        <div><p class="text-xl font-bold">${avgGoals2}</p><p>Ø Tore ${team2}</p></div>
+                        <div><p class="text-lg sm:text-xl font-bold">${avgGoals1}</p><p class="text-xs sm:text-sm">Ø Tore ${team1}</p></div>
+                        <div><p class="text-lg sm:text-xl font-bold">${avgGoals2}</p><p class="text-xs sm:text-sm">Ø Tore ${team2}</p></div>
                     </div>
                 </div>
                 <div class="mt-6">
                     <h4 class="text-lg font-semibold mb-2">Spiel-Historie</h4>
                     <ul class="space-y-2">
                         ${matchups.map(game => `
-                            <li class="p-3 bg-white border rounded-lg flex justify-between items-center">
-                                <span>${game.date}</span>
-                                <span>${getCorrectedName(game, game.homeTeam)} - ${getCorrectedName(game, game.guestTeam)}</span>
-                                <span class="font-bold text-lg">${game.finalScore}</span>
+                            <li class="p-3 bg-white border rounded-lg flex flex-col sm:flex-row justify-between sm:items-center text-sm gap-2">
+                                <span class="font-semibold">${game.date}</span>
+                                <span class="text-center">${getCorrectedName(game, game.homeTeam)} - ${getCorrectedName(game, game.guestTeam)}</span>
+                                <span class="font-bold text-base">${game.finalScore}</span>
                             </li>
                         `).join('')}
                     </ul>
@@ -1723,7 +1723,7 @@ Ergebnis 30:25 (15:12)
                 allGames = gamesFromDb.sort((a, b) => {
                     const dateA = new Date(a.date.split('.').reverse().join('-')).getTime();
                     const dateB = new Date(b.date.split('.').reverse().join('-')).getTime();
-                    return dateA - dateB;
+                    return dateB - dateA; // Sort descending, newest first
                 });
                 
                 console.log('Data from Firestore loaded/updated:', allGames.length, 'games');
@@ -1744,7 +1744,7 @@ Ergebnis 30:25 (15:12)
               apiKey: "AIzaSyBzvp7Gor7qzDn78QoVEHU-vwG7imY4xKw",
               authDomain: "sgbdmb2425.firebaseapp.com",
               projectId: "sgbdmb2425",
-              storageBucket: "sgbdmb2425.firebasestorage.app",
+              storageBucket: "sgbdmb2425.appspot.com",
               messagingSenderId: "132227886986",
               appId: "1:132227886986:web:0499501f444fdc10b12273",
               measurementId: "G-9NKRXVDLBV"
