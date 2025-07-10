@@ -80,12 +80,18 @@
             transform: scale(1.05);
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
+        .sub-tab-active { 
+            border-bottom-color: #4f46e5; /* indigo-600 */
+            color: #4f46e5; 
+        }
+        .sub-view { display: none; }
+        .sub-view-active { display: block; }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800">
 
     <div class="container mx-auto p-4 max-w-7xl">
-        <header class="bg-white rounded-xl shadow-md p-4 sm:p-6 mb-6">
+        <header class="bg-white rounded-xl shadow-md p-4 sm:p-6 mb-6 flex justify-between items-center">
             <div class="flex items-baseline space-x-3">
                 <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-indigo-600">Handball Statistik</h1>
                 <span class="text-sm font-light text-black">by Carsten</span>
@@ -99,6 +105,7 @@
                 <button id="tab-spielauswertung" class="tab-btn px-3 py-3 font-medium text-sm border-b-2 border-transparent text-gray-500 hover:text-indigo-600 hover:border-gray-300 shrink-0">Spielauswertung</button>
                 <button id="tab-spieler" class="tab-btn px-3 py-3 font-medium text-sm border-b-2 border-transparent text-gray-500 hover:text-indigo-600 hover:border-gray-300 shrink-0">Spieler-Profile</button>
                 <button id="tab-h2h" class="tab-btn px-3 py-3 font-medium text-sm border-b-2 border-transparent text-gray-500 hover:text-indigo-600 hover:border-gray-300 shrink-0">H2H-Vergleich</button>
+                <button id="tab-einstellungen" class="tab-btn px-3 py-3 font-medium text-sm border-b-2 border-transparent text-gray-500 hover:text-indigo-600 hover:border-gray-300 shrink-0">Einstellungen</button>
             </nav>
         </div>
 
@@ -125,24 +132,32 @@
                 <div class="bg-white p-4 sm:p-6 rounded-lg shadow-md">
                     <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-4 gap-4">
                         <h2 class="text-2xl font-bold shrink-0">Archivierte Spiele</h2>
-                        <div class="w-full flex flex-col sm:flex-row gap-4 items-center">
-                            <input type="text" id="archive-search-input" placeholder="Nach Team filtern..." class="p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 w-full sm:flex-grow">
-                            <div class="w-full sm:w-auto flex gap-2 justify-end">
-                                <button id="show-eingabe-view-btn" class="bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700 transition-transform transform hover:scale-105 w-full sm:w-auto">
-                                    Neues Spiel
-                                </button>
-                                <div class="flex items-center space-x-2">
-                                    <button id="export-btn" title="Alle Spiele exportieren" class="p-2 rounded-full bg-blue-500 text-white hover:bg-blue-600 transition">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
-                                    </button>
-                                    <button id="import-btn" title="Spiele importieren" class="p-2 rounded-full bg-green-500 text-white hover:bg-green-600 transition">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
-                                    </button>
-                                    <input type="file" id="import-file-input" class="hidden" accept=".json">
-                                </div>
-                            </div>
+                        <button id="show-eingabe-view-btn" class="bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700 transition-transform transform hover:scale-105 w-full sm:w-auto">
+                            Neues Spiel
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 p-4 bg-gray-50 rounded-lg border">
+                        <div>
+                            <label for="archive-search-input" class="block text-sm font-medium text-gray-700">Team-Suche (Hauptfilter)</label>
+                            <input type="text" id="archive-search-input" placeholder="Team eingeben..." class="mt-1 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 w-full">
+                        </div>
+                        <div>
+                            <label for="archive-filter-location" class="block text-sm font-medium text-gray-700">Spielort</label>
+                            <select id="archive-filter-location" class="mt-1 block w-full p-2 border-gray-300 rounded-md shadow-sm">
+                                <option value="all">Alle</option>
+                                <option value="home">Nur Heimspiele</option>
+                                <option value="away">Nur Auswärtsspiele</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="archive-filter-opponent" class="block text-sm font-medium text-gray-700">Gegner</label>
+                            <select id="archive-filter-opponent" class="mt-1 block w-full p-2 border-gray-300 rounded-md shadow-sm" disabled>
+                                <option value="all">Alle Gegner</option>
+                            </select>
                         </div>
                     </div>
+
                     <div id="import-status" class="my-4 text-center"></div>
                     <p class="text-sm text-gray-500 mb-4">Klicke auf ein Spiel, um die Auswertungen anzuzeigen.</p>
                     <div id="game-archive-list" class="space-y-2"></div>
@@ -234,7 +249,7 @@
                             </div>
                         </div>
                         <div id="player-card-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 max-h-96 overflow-y-auto p-2 bg-gray-50 rounded-lg">
-                            </div>
+                        </div>
                     </div>
 
                     <div id="player-profile-container" class="space-y-8">
@@ -261,6 +276,42 @@
                 </div>
             </div>
 
+            <div id="view-einstellungen" class="view">
+                <div class="bg-white p-4 sm:p-6 rounded-lg shadow-md">
+                    <div class="border-b border-gray-200">
+                        <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                            <button id="subtab-kader" class="sub-tab-btn border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                                Kaderverwaltung
+                            </button>
+                            <button id="subtab-daten" class="sub-tab-btn border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                                Datenverwaltung
+                            </button>
+                        </nav>
+                    </div>
+                    <div class="pt-6">
+                        <div id="subview-kader" class="sub-view">
+                            <div id="custom-roster-management-container"></div>
+                        </div>
+                        <div id="subview-daten" class="sub-view">
+                            <h3 class="text-xl font-bold mb-4 text-indigo-700">Gesamtdaten-Verwaltung</h3>
+                            <p class="text-sm text-gray-600 mb-4">
+                                Hier kannst du <strong>alle</strong> Daten (Spiele, Kader, Einstellungen) als eine einzige Sicherungsdatei exportieren oder aus einer solchen Datei wiederherstellen.
+                                <strong class="text-red-600">Achtung:</strong> Der Import überschreibt alle vorhandenen Daten!
+                            </p>
+                            <div class="flex flex-col sm:flex-row gap-4">
+                                <button id="import-all-btn" class="flex-1 bg-green-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-600 transition">
+                                    Alles importieren (.json)
+                                </button>
+                                <button id="export-all-btn" class="flex-1 bg-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-600 transition">
+                                    Alles exportieren (.json)
+                                </button>
+                            </div>
+                            <div id="data-import-status" class="my-4 text-center"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </main>
         
         <footer class="text-center text-sm text-gray-500 mt-12 pb-4">
@@ -271,7 +322,7 @@
             </div>
         </footer>
     </div>
-    
+
     <div id="name-correction-modal" class="modal">
         <div class="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full mx-4">
             <h3 class="text-lg font-bold mb-4">Spielernamen korrigieren</h3>
@@ -293,6 +344,22 @@
             <div class="flex justify-center space-x-4">
                 <button id="confirm-cancel-btn" class="bg-gray-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-gray-700">Abbrechen</button>
                 <button id="confirm-ok-btn" class="bg-red-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-red-700">Bestätigen</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="custom-roster-modal" class="modal">
+        <div class="bg-white p-6 rounded-lg shadow-xl max-w-2xl w-full mx-4">
+            <h3 id="custom-roster-modal-title" class="text-lg font-bold mb-4">Kader bearbeiten</h3>
+            <div class="mb-4">
+                <label for="custom-roster-name-input" class="block text-sm font-medium text-gray-700">Kadername</label>
+                <input type="text" id="custom-roster-name-input" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+            <div id="custom-roster-editor" class="space-y-2 max-h-80 overflow-y-auto mb-6 p-2 border rounded-md"></div>
+            <button id="add-custom-roster-player-btn" class="mb-4 bg-green-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-600 text-sm">Spieler hinzufügen</button>
+            <div class="flex justify-end space-x-4">
+                <button id="custom-roster-cancel-btn" class="bg-gray-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-700">Abbrechen</button>
+                <button id="custom-roster-save-btn" class="bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700">Speichern</button>
             </div>
         </div>
     </div>
@@ -324,6 +391,8 @@
         </div>
     </div>
 
+    <input type="file" id="import-all-file-input" class="hidden" accept=".json">
+    <input type="file" id="import-roster-archive-input" class="hidden" accept=".json">
 
     <div id="notification" class="notification"></div>
 
@@ -331,29 +400,15 @@
         // Firebase Modular SDK Imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, updateDoc, deleteDoc, onSnapshot, collection, writeBatch } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+        import { getFirestore, doc, addDoc, setDoc, updateDoc, deleteDoc, onSnapshot, collection, writeBatch, getDocs } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
         
         // --- CONFIG & INITIALIZATION ---
-        const APP_VERSION = "4.5.8-final-final-7m-fix";
-
-        // Firebase instances
-        let app, db, auth;
-        let userId = null;
-        let isAuthReady = false;
-        let gamesCollectionRef = null;
-        let appId;
-
-        const SG_BUENDE_DUENNE = "SG Bünde-Dünne";
-        const STANDARD_ROSTER_SGBD = {
-            2: 'Finn Diekmann', 3: 'Ben Wienecke', 4: 'Mika Fleischer', 5: 'Johannes Müller',
-            7: 'Karl-Moritz Westphal', 8: 'Erik Meier', 9: 'Jannes Westerheide', 10: 'Nico Schneidmiller',
-            11: 'Henrik Link', 12: 'Alex Dekanoidze', 13: 'Conner Brinkmeyer', 15: 'Finn Heinze',
-            16: 'Tom Gieselmann', 17: 'Silas Peitzmann', 18: 'Fynn Rottmann'
-        };
+        const APP_VERSION = "4.15.1-filter-fix";
         
         // Global state variables
         let allGames = [];
-        let unsubscribeFromGames = null;
+        let allCustomRosters = [];
+        let defaultRosterId = null;
         let currentlyLoadedGameId = null;
         let currentlyEditingGameId = null;
         let scoreChart = null;
@@ -361,85 +416,135 @@
         let playerProfileChart = null;
         let selectedPlayers = [];
         let selectedPlayerName = null;
+        let currentlyEditingCustomRosterId = null;
 
         // --- DOM ELEMENTS ---
-        const views = {
-            eingabe: document.getElementById('view-eingabe'), 
-            archiv: document.getElementById('view-archiv'),
-            statistik: document.getElementById('view-statistik'), 
-            spielauswertung: document.getElementById('view-spielauswertung'),
-            spieler: document.getElementById('view-spieler'),
-            h2h: document.getElementById('view-h2h'),
-        };
-        const tabs = {
-            archiv: document.getElementById('tab-archiv'),
-            statistik: document.getElementById('tab-statistik'),
-            spielauswertung: document.getElementById('tab-spielauswertung'),
-            spieler: document.getElementById('tab-spieler'),
-            h2h: document.getElementById('tab-h2h'),
-        };
-        const gameDataInput = document.getElementById('game-data-input');
-        const processBtn = document.getElementById('process-and-save-btn');
-        const cancelBtn = document.getElementById('cancel-edit-btn');
-        const eingabeTitle = document.getElementById('eingabe-title');
-        const inputStatus = document.getElementById('input-status');
-        const gameArchiveList = document.getElementById('game-archive-list');
-        const archiveSearchInput = document.getElementById('archive-search-input');
-        const showEingabeBtn = document.getElementById('show-eingabe-view-btn');
-        const teamSelect = document.getElementById('team-select');
-        const statsContainer = document.getElementById('stats-container');
-        const statsPlaceholder = document.getElementById('stats-placeholder');
-        const appVersionDisplay = document.getElementById('app-version');
-        const spielauswertungPlaceholder = document.getElementById('spielauswertung-placeholder');
-        const spielauswertungContent = document.getElementById('spielauswertung-content');
-        const gameDetailTitle = document.getElementById('game-detail-title');
-        const gameDetailSubtitle = document.getElementById('game-detail-subtitle');
-        const scoreChartCanvas = document.getElementById('score-chart');
-        const scoringRunChartCanvas = document.getElementById('scoring-run-chart');
-        const playerGoalList = document.getElementById('player-goal-list');
-        const tabularContentContainer = document.getElementById('tabular-content-container');
-        const exportBtn = document.getElementById('export-btn');
-        const importBtn = document.getElementById('import-btn');
-        const importFileInput = document.getElementById('import-file-input');
-        const importStatus = document.getElementById('import-status');
-        const correctNamesBtn = document.getElementById('correct-names-btn');
-        const nameCorrectionModal = document.getElementById('name-correction-modal');
-        const nameCorrectionList = document.getElementById('name-correction-list');
-        const nameCorrectionSaveBtn = document.getElementById('name-correction-save');
-        const nameCorrectionCancelBtn = document.getElementById('name-correction-cancel');
-        const nameCorrectionRevertUIBtn = document.getElementById('name-correction-revert-ui');
-        const confirmationModal = document.getElementById('confirmation-modal');
-        const confirmationMessage = document.getElementById('confirmation-message');
-        const confirmOkBtn = document.getElementById('confirm-ok-btn');
-        const confirmCancelBtn = document.getElementById('confirm-cancel-btn');
-        const notificationElement = document.getElementById('notification');
-        const connectionStatusContainer = document.getElementById('connection-status-container');
-        const connectionStatusDot = document.getElementById('connection-status-dot');
-        const connectionStatusText = document.getElementById('connection-status-text');
-        const detailTabGraphical = document.getElementById('detail-tab-graphical');
-        const detailTabTabular = document.getElementById('detail-tab-tabular');
-        const detailContentGraphical = document.getElementById('detail-content-graphical');
-        const detailContentTabular = document.getElementById('detail-content-tabular');
-        const gameNavSelect = document.getElementById('game-nav-select');
-        const prevGameBtn = document.getElementById('prev-game-btn');
-        const nextGameBtn = document.getElementById('next-game-btn');
-        const playerProfileContainer = document.getElementById('player-profile-container');
-        const playerProfilePlaceholder = document.getElementById('player-profile-placeholder');
-        const playerCardContainer = document.getElementById('player-card-container');
-        const playerSearchInput = document.getElementById('player-search-input');
-        const playerTeamFilter = document.getElementById('player-team-filter');
-        const h2hTeam1Select = document.getElementById('h2h-team1-select');
-        const h2hTeam2Select = document.getElementById('h2h-team2-select');
-        const h2hCompareBtn = document.getElementById('h2h-compare-btn');
-        const connectionDetailsModal = document.getElementById('connection-details-modal');
-        const connectionModalCloseBtn = document.getElementById('connection-modal-close-btn');
-        const modalConnectionStatus = document.getElementById('modal-connection-status');
-        const modalAppId = document.getElementById('modal-app-id');
-        const modalUserId = document.getElementById('modal-user-id');
-        const modalDbPath = document.getElementById('modal-db-path');
+        let views, tabs, gameDataInput, processBtn, cancelBtn, eingabeTitle, inputStatus, gameArchiveList, archiveSearchInput, showEingabeBtn, teamSelect, statsContainer, statsPlaceholder, appVersionDisplay, spielauswertungPlaceholder, spielauswertungContent, gameDetailTitle, gameDetailSubtitle, scoreChartCanvas, scoringRunChartCanvas, playerGoalList, tabularContentContainer, exportAllBtn, importAllBtn, importAllFileInput, dataImportStatus, correctNamesBtn, nameCorrectionModal, nameCorrectionList, nameCorrectionSaveBtn, nameCorrectionCancelBtn, nameCorrectionRevertUIBtn, confirmationModal, confirmationMessage, confirmOkBtn, confirmCancelBtn, notificationElement, connectionStatusContainer, connectionStatusDot, connectionStatusText, detailTabGraphical, detailTabTabular, detailContentGraphical, detailContentTabular, gameNavSelect, prevGameBtn, nextGameBtn, playerProfileContainer, playerProfilePlaceholder, playerCardContainer, playerSearchInput, playerTeamFilter, h2hTeam1Select, h2hTeam2Select, h2hCompareBtn, connectionDetailsModal, connectionModalCloseBtn, modalConnectionStatus, modalAppId, modalUserId, modalDbPath, customRosterManagementContainer, customRosterModal, customRosterModalTitle, customRosterNameInput, customRosterEditor, addCustomRosterPlayerBtn, customRosterSaveBtn, customRosterCancelBtn, importRosterArchiveInput, archiveFilterLocation, archiveFilterOpponent, settingsView;
 
+        // --- Game Navigation Functions ---
+        function populateGameNavigation(gameId) {
+            gameNavSelect.innerHTML = '';
+            allGames.forEach(game => {
+                const option = document.createElement('option');
+                option.value = game.id;
+                option.textContent = `${game.date} - ${getCorrectedName(game, game.homeTeam)} vs ${getCorrectedName(game, game.guestTeam)}`;
+                option.selected = game.id === gameId;
+                gameNavSelect.appendChild(option);
+            });
+
+            const currentIndex = allGames.findIndex(g => g.id === gameId);
+            prevGameBtn.disabled = currentIndex === 0;
+            nextGameBtn.disabled = currentIndex === allGames.length - 1;
+        }
+
+        function navigateToPreviousGame() {
+            const currentIndex = allGames.findIndex(g => g.id === currentlyLoadedGameId);
+            if (currentIndex > 0) {
+                renderGameDetail(allGames[currentIndex - 1].id, false);
+            }
+        }
+
+        function navigateToNextGame() {
+            const currentIndex = allGames.findIndex(g => g.id === currentlyLoadedGameId);
+            if (currentIndex < allGames.length - 1) {
+                renderGameDetail(allGames[currentIndex + 1].id, false);
+            }
+        }
+        
         // --- UI & VIEW MANAGEMENT ---
         function setupUI() {
+            // DOM Element Initialization
+            views = {
+                eingabe: document.getElementById('view-eingabe'), 
+                archiv: document.getElementById('view-archiv'),
+                statistik: document.getElementById('view-statistik'), 
+                spielauswertung: document.getElementById('view-spielauswertung'),
+                spieler: document.getElementById('view-spieler'),
+                h2h: document.getElementById('view-h2h'),
+                einstellungen: document.getElementById('view-einstellungen'),
+            };
+            tabs = {
+                archiv: document.getElementById('tab-archiv'),
+                statistik: document.getElementById('tab-statistik'),
+                spielauswertung: document.getElementById('tab-spielauswertung'),
+                spieler: document.getElementById('tab-spieler'),
+                h2h: document.getElementById('tab-h2h'),
+                einstellungen: document.getElementById('tab-einstellungen'),
+            };
+            gameDataInput = document.getElementById('game-data-input');
+            processBtn = document.getElementById('process-and-save-btn');
+            cancelBtn = document.getElementById('cancel-edit-btn');
+            eingabeTitle = document.getElementById('eingabe-title');
+            inputStatus = document.getElementById('input-status');
+            gameArchiveList = document.getElementById('game-archive-list');
+            archiveSearchInput = document.getElementById('archive-search-input');
+            showEingabeBtn = document.getElementById('show-eingabe-view-btn');
+            teamSelect = document.getElementById('team-select');
+            statsContainer = document.getElementById('stats-container');
+            statsPlaceholder = document.getElementById('stats-placeholder');
+            appVersionDisplay = document.getElementById('app-version');
+            spielauswertungPlaceholder = document.getElementById('spielauswertung-placeholder');
+            spielauswertungContent = document.getElementById('spielauswertung-content');
+            gameDetailTitle = document.getElementById('game-detail-title');
+            gameDetailSubtitle = document.getElementById('game-detail-subtitle');
+            scoreChartCanvas = document.getElementById('score-chart');
+            scoringRunChartCanvas = document.getElementById('scoring-run-chart');
+            playerGoalList = document.getElementById('player-goal-list');
+            tabularContentContainer = document.getElementById('tabular-content-container');
+            exportAllBtn = document.getElementById('export-all-btn');
+            importAllBtn = document.getElementById('import-all-btn');
+            importAllFileInput = document.getElementById('import-all-file-input');
+            dataImportStatus = document.getElementById('data-import-status');
+            correctNamesBtn = document.getElementById('correct-names-btn');
+            nameCorrectionModal = document.getElementById('name-correction-modal');
+            nameCorrectionList = document.getElementById('name-correction-list');
+            nameCorrectionSaveBtn = document.getElementById('name-correction-save');
+            nameCorrectionCancelBtn = document.getElementById('name-correction-cancel');
+            nameCorrectionRevertUIBtn = document.getElementById('name-correction-revert-ui');
+            confirmationModal = document.getElementById('confirmation-modal');
+            confirmationMessage = document.getElementById('confirmation-message');
+            confirmOkBtn = document.getElementById('confirm-ok-btn');
+            confirmCancelBtn = document.getElementById('confirm-cancel-btn');
+            notificationElement = document.getElementById('notification');
+            connectionStatusContainer = document.getElementById('connection-status-container');
+            connectionStatusDot = document.getElementById('connection-status-dot');
+            connectionStatusText = document.getElementById('connection-status-text');
+            detailTabGraphical = document.getElementById('detail-tab-graphical');
+            detailTabTabular = document.getElementById('detail-tab-tabular');
+            detailContentGraphical = document.getElementById('detail-content-graphical');
+            detailContentTabular = document.getElementById('detail-content-tabular');
+            gameNavSelect = document.getElementById('game-nav-select');
+            prevGameBtn = document.getElementById('prev-game-btn');
+            nextGameBtn = document.getElementById('next-game-btn');
+            playerProfileContainer = document.getElementById('player-profile-container');
+            playerProfilePlaceholder = document.getElementById('player-profile-placeholder');
+            playerCardContainer = document.getElementById('player-card-container');
+            playerSearchInput = document.getElementById('player-search-input');
+            playerTeamFilter = document.getElementById('player-team-filter');
+            h2hTeam1Select = document.getElementById('h2h-team1-select');
+            h2hTeam2Select = document.getElementById('h2h-team2-select');
+            h2hCompareBtn = document.getElementById('h2h-compare-btn');
+            connectionDetailsModal = document.getElementById('connection-details-modal');
+            connectionModalCloseBtn = document.getElementById('connection-modal-close-btn');
+            modalConnectionStatus = document.getElementById('modal-connection-status');
+            modalAppId = document.getElementById('modal-app-id');
+            modalUserId = document.getElementById('modal-user-id');
+            modalDbPath = document.getElementById('modal-db-path');
+            customRosterManagementContainer = document.getElementById('custom-roster-management-container');
+            customRosterModal = document.getElementById('custom-roster-modal');
+            customRosterModalTitle = document.getElementById('custom-roster-modal-title');
+            customRosterNameInput = document.getElementById('custom-roster-name-input');
+            customRosterEditor = document.getElementById('custom-roster-editor');
+            addCustomRosterPlayerBtn = document.getElementById('add-custom-roster-player-btn');
+            customRosterSaveBtn = document.getElementById('custom-roster-save-btn');
+            customRosterCancelBtn = document.getElementById('custom-roster-cancel-btn');
+            importRosterArchiveInput = document.getElementById('import-roster-archive-input');
+            archiveFilterLocation = document.getElementById('archive-filter-location');
+            archiveFilterOpponent = document.getElementById('archive-filter-opponent');
+            settingsView = document.getElementById('view-einstellungen');
+
+
+            // Event Listeners
             appVersionDisplay.textContent = APP_VERSION;
             Object.keys(tabs).forEach(key => {
                 tabs[key].addEventListener('click', () => switchView(key));
@@ -452,9 +557,9 @@
                 switchView('eingabe');
             });
             
-            exportBtn.addEventListener('click', exportGames);
-            importBtn.addEventListener('click', () => importFileInput.click());
-            importFileInput.addEventListener('change', importGames);
+            exportAllBtn.addEventListener('click', exportAllData);
+            importAllBtn.addEventListener('click', () => importAllFileInput.click());
+            importAllFileInput.addEventListener('change', importAllData);
             correctNamesBtn.addEventListener('click', openNameCorrectionModal);
             nameCorrectionSaveBtn.addEventListener('click', saveNameCorrections);
             nameCorrectionCancelBtn.addEventListener('click', () => nameCorrectionModal.classList.remove('flex'));
@@ -466,15 +571,23 @@
                  showNotification('Änderungen im Formular zurückgesetzt.', 'info');
             });
             
+            settingsView.addEventListener('click', (event) => {
+                const subtab = event.target.closest('.sub-tab-btn');
+                if (subtab) {
+                    switchSettingsSubView(subtab.id.replace('subtab-', ''));
+                    return;
+                }
+            });
+
             nameCorrectionList.addEventListener('change', (event) => {
-                if (event.target.classList.contains('roster-select')) {
-                    const select = event.target;
-                    const originalName = select.dataset.inputForOriginalName;
-                    const selectedValue = select.value;
-                    const inputField = nameCorrectionList.querySelector(`input[data-original-name="${originalName}"]`);
-                    if (inputField && selectedValue) {
-                        inputField.value = selectedValue;
-                    }
+                const rosterSelect = event.target.closest('.custom-roster-select');
+                const playerSelect = event.target.closest('.roster-select');
+
+                if (rosterSelect) {
+                    handleCustomRosterSelectionChange(rosterSelect);
+                }
+                if (playerSelect) {
+                    handlePlayerSelectionChange(playerSelect);
                 }
             });
 
@@ -532,6 +645,8 @@
             prevGameBtn.addEventListener('click', navigateToPreviousGame);
             nextGameBtn.addEventListener('click', navigateToNextGame);
             archiveSearchInput.addEventListener('input', () => renderArchiveList());
+            archiveFilterLocation.addEventListener('change', () => renderArchiveList());
+            archiveFilterOpponent.addEventListener('change', () => renderArchiveList());
             h2hCompareBtn.addEventListener('click', renderH2hComparison);
 
             // Player View Listeners
@@ -544,6 +659,13 @@
                     renderPlayerProfile(playerName);
                 }
             });
+
+            // Custom Roster Modal Listeners
+            customRosterSaveBtn.addEventListener('click', saveCustomRoster);
+            customRosterCancelBtn.addEventListener('click', () => customRosterModal.classList.remove('flex'));
+            addCustomRosterPlayerBtn.addEventListener('click', addPlayerToCustomRosterUI);
+            importRosterArchiveInput.addEventListener('change', importCustomRosters);
+
 
             switchView('archiv');
         }
@@ -566,7 +688,11 @@
             } else if (viewName === 'eingabe') {
                 tabs.archiv.classList.add('tab-active');
             }
-
+            
+            if (viewName === 'einstellungen') {
+                renderSettings();
+                switchSettingsSubView('kader'); // Default to Kader sub-tab
+            }
 
             // Handle placeholder for the evaluation view
             if (viewName === 'spielauswertung') {
@@ -578,6 +704,17 @@
                     spielauswertungContent.style.display = 'none';
                 }
             }
+        }
+
+        function switchSettingsSubView(subViewName) {
+            document.querySelectorAll('.sub-view').forEach(v => v.classList.remove('sub-view-active'));
+            document.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('sub-tab-active'));
+
+            const activeView = document.getElementById(`subview-${subViewName}`);
+            const activeBtn = document.getElementById(`subtab-${subViewName}`);
+
+            if (activeView) activeView.classList.add('sub-view-active');
+            if (activeBtn) activeBtn.classList.add('sub-tab-active');
         }
 
 
@@ -711,8 +848,8 @@ Ergebnis 30:25 (15:12)
                 if (timeStampCount > 0) warnings = 1;
                 if (timeStampCount > 1) suspensions = timeStampCount - 1;
                 if (nameEndIndex > 1 && /\d+\/\d+/.test(parts[nameEndIndex - 1])) {
-                    // Corrected based on user feedback: The format is Versuche/Tore (Attempts/Goals).
                     const sevenMeterStats = parts[nameEndIndex - 1].split('/');
+                    // Corrected based on user feedback: The format is Versuche/Tore (Attempts/Goals).
                     sevenMetersAttempted = parseInt(sevenMeterStats[0], 10);
                     sevenMeterGoals = parseInt(sevenMeterStats[1], 10);
                     nameEndIndex--;
@@ -883,7 +1020,7 @@ Ergebnis 30:25 (15:12)
             } else {
                  const activeTabEl = document.querySelector('.tab-active');
                  if (activeTabEl) {
-                    switchView(activeTabEl.id.replace('tab-',''));
+                     switchView(activeTabEl.id.replace('tab-',''));
                  }
             }
         }
@@ -897,6 +1034,7 @@ Ergebnis 30:25 (15:12)
             const game = allGames.find(g => g.id === currentlyLoadedGameId);
             if (!game) return;
             nameCorrectionList.innerHTML = '';
+            
             const createTeamList = (teamName, playersOfTeam) => {
                 const uniquePlayers = Array.from(new Map(playersOfTeam.map(p => [p.name, p])).values());
                 if (uniquePlayers.length > 0) {
@@ -904,29 +1042,23 @@ Ergebnis 30:25 (15:12)
                     teamHeader.className = 'text-md font-bold text-gray-800 mt-4 first:mt-0';
                     teamHeader.textContent = getCorrectedName(game, teamName);
                     nameCorrectionList.appendChild(teamHeader);
+                    
                     uniquePlayers.forEach(player => {
                         const originalName = player.name;
                         const correctedName = getCorrectedName(game, originalName);
                         const div = document.createElement('div');
                         div.className = 'player-correction-item space-y-1 py-2 border-t first:border-t-0';
                         
-                        let rosterSelectHtml = '';
-                        if (teamName === SG_BUENDE_DUENNE) {
-                            const standardNameForNumber = STANDARD_ROSTER_SGBD[player.number];
-                            const optionsHtml = Object.values(STANDARD_ROSTER_SGBD)
-                                .map(name => {
-                                    const isSelected = name === standardNameForNumber ? 'selected' : '';
-                                    return `<option value="${name}" ${isSelected}>${name}</option>`;
-                                })
-                                .join('');
-
-                            rosterSelectHtml = `
-                                <select class="roster-select w-full p-1 mt-1 border border-gray-200 rounded-md bg-gray-50 text-sm" data-input-for-original-name="${originalName}">
-                                    <option value="">-- Aus Kader wählen --</option>
-                                    ${optionsHtml}
-                                </select>
-                            `;
-                        }
+                        const customRosterOptions = allCustomRosters.map(r => `<option value="${r.id}">${r.name}</option>`).join('');
+                        const rosterSelectHtml = `
+                            <select class="custom-roster-select w-full p-1 mt-1 border border-gray-200 rounded-md bg-gray-50 text-sm" data-player-select-id="player-select-${originalName.replace(/\s+/g, '-')}">
+                                <option value="">-- Aus Kader Archiv wählen --</option>
+                                ${customRosterOptions}
+                            </select>
+                            <select id="player-select-${originalName.replace(/\s+/g, '-')}" class="roster-select w-full p-1 mt-1 border border-gray-200 rounded-md bg-gray-50 text-sm" data-input-for-original-name="${originalName}" disabled>
+                                <option value="">-- Spieler wählen --</option>
+                            </select>
+                        `;
                         
                         div.innerHTML = `
                             <div>
@@ -936,15 +1068,57 @@ Ergebnis 30:25 (15:12)
                              ${rosterSelectHtml}
                         `;
                         nameCorrectionList.appendChild(div);
+
+                        // Auto-select roster if team name matches a roster name
+                        const rosterSelect = div.querySelector('.custom-roster-select');
+                        const matchingRoster = allCustomRosters.find(r => r.name === getCorrectedName(game, teamName));
+                        if (rosterSelect && matchingRoster) {
+                            rosterSelect.value = matchingRoster.id;
+                            handleCustomRosterSelectionChange(rosterSelect);
+                        }
                     });
                 }
             };
+            
             const homePlayers = game.players.filter(p => p.team === game.homeTeam);
             createTeamList(game.homeTeam, homePlayers);
             const guestPlayers = game.players.filter(p => p.team === game.guestTeam);
             createTeamList(game.guestTeam, guestPlayers);
+
             nameCorrectionModal.classList.add('flex');
         }
+        
+        function handleCustomRosterSelectionChange(selectElement) {
+            const rosterId = selectElement.value;
+            const playerSelectId = selectElement.dataset.playerSelectId;
+            const playerSelect = document.getElementById(playerSelectId);
+
+            if (!playerSelect) return;
+
+            playerSelect.innerHTML = '<option value="">-- Spieler wählen --</option>';
+            playerSelect.disabled = true;
+
+            if (rosterId) {
+                const selectedRoster = allCustomRosters.find(r => r.id === rosterId);
+                if (selectedRoster && selectedRoster.roster) {
+                    const playerOptions = Object.values(selectedRoster.roster)
+                        .map(name => `<option value="${name}">${name}</option>`)
+                        .join('');
+                    playerSelect.innerHTML += playerOptions;
+                    playerSelect.disabled = false;
+                }
+            }
+        }
+
+        function handlePlayerSelectionChange(selectElement) {
+            const originalName = selectElement.dataset.inputForOriginalName;
+            const selectedValue = selectElement.value;
+            const inputField = nameCorrectionList.querySelector(`input[data-original-name="${originalName}"]`);
+            if (inputField && selectedValue) {
+                inputField.value = selectedValue;
+            }
+        }
+
 
         async function saveNameCorrections() {
             if (!isAuthReady || !gamesCollectionRef) {
@@ -956,12 +1130,19 @@ Ergebnis 30:25 (15:12)
 
             const newCorrections = { ...(game.nameCorrections || {}) };
             const inputs = nameCorrectionList.querySelectorAll('input[data-original-name]');
+            
             inputs.forEach(input => {
                 const originalName = input.dataset.originalName;
                 const newName = input.value.trim();
-                if (newName && newName !== originalName) { newCorrections[originalName] = newName; } 
-                else if (!newName || newName === originalName) { delete newCorrections[originalName]; }
+                
+                if (newName && newName !== originalName) {
+                    newCorrections[originalName] = newName;
+                } else if (!newName || newName === originalName) {
+                    // Remove correction if it's empty or same as original
+                    delete newCorrections[originalName];
+                }
             });
+
             try {
                 const gameDocRef = doc(gamesCollectionRef, game.id);
                 await updateDoc(gameDocRef, { nameCorrections: newCorrections });
@@ -974,51 +1155,84 @@ Ergebnis 30:25 (15:12)
         }
 
         // --- IMPORT / EXPORT ---
-        function exportGames() {
-            if (allGames.length === 0) {
-                showNotification("Keine Spiele zum Exportieren vorhanden.", "info");
+        function exportAllData() {
+            if (allGames.length === 0 && allCustomRosters.length === 0) {
+                showNotification("Keine Daten zum Exportieren vorhanden.", "info");
                 return;
             }
-            const jsonString = JSON.stringify(allGames, null, 2);
+            const dataToExport = {
+                games: allGames,
+                customRosters: allCustomRosters.map(({ id, ...rest }) => rest), // Export without Firestore IDs
+            };
+            const jsonString = JSON.stringify(dataToExport, null, 2);
             const blob = new Blob([jsonString], { type: "application/json" });
             const url = URL.createObjectURL(blob);
             const a = document.createElement("a");
             a.href = url;
-            a.download = `handball_statistik_export_${new Date().toISOString().slice(0,10)}.json`;
+            a.download = `handball_statistik_backup_${new Date().toISOString().slice(0,10)}.json`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
+            showNotification("Komplettes Backup wird exportiert...", "success");
         }
 
-        async function importGames(event) {
-            if (!isAuthReady || !gamesCollectionRef) {
-                showNotification("Datenbank ist nicht bereit.", "error");
-                return;
-            }
+        async function importAllData(event) {
             const file = event.target.files[0];
             if (!file) return;
+
             const reader = new FileReader();
-            reader.onload = async (e) => {
+            reader.onload = (e) => {
                 try {
-                    const importedGames = JSON.parse(e.target.result);
-                    if (!Array.isArray(importedGames)) { throw new Error("Importierte Datei hat kein gültiges Format (Array erwartet)."); }
-                    importStatus.innerHTML = `<p class="text-blue-600">Importiere ${importedGames.length} Spiele in die Datenbank...</p>`;
-                    const batch = writeBatch(db);
-                    importedGames.forEach(game => {
-                        if (game.id) {
-                            const docRef = doc(gamesCollectionRef, game.id.toString());
-                            batch.set(docRef, game, { merge: true });
+                    const importedData = JSON.parse(e.target.result);
+                    if (!importedData || !Array.isArray(importedData.games) || !Array.isArray(importedData.customRosters)) {
+                        throw new Error("Die importierte Datei hat ein ungültiges Format oder es fehlen 'games'/'customRosters'.");
+                    }
+                    
+                    showConfirmation("Möchten Sie wirklich alle Daten überschreiben? Diese Aktion kann nicht rückgängig gemacht werden.", async () => {
+                        if (!isAuthReady) {
+                            showNotification("Datenbank ist nicht bereit.", "error");
+                            return;
+                        }
+                        dataImportStatus.innerHTML = `<p class="text-blue-600">Lösche alte Daten und importiere Backup...</p>`;
+                        
+                        try {
+                            const batch = writeBatch(db);
+                            
+                            // Delete all existing documents
+                            const gamesSnapshot = await getDocs(gamesCollectionRef);
+                            gamesSnapshot.forEach(doc => batch.delete(doc.ref));
+                            
+                            const rostersSnapshot = await getDocs(customRostersCollectionRef);
+                            rostersSnapshot.forEach(doc => batch.delete(doc.ref));
+
+                            // Add imported documents
+                            importedData.games.forEach(game => {
+                                const gameDocRef = doc(gamesCollectionRef, game.id.toString());
+                                batch.set(gameDocRef, game);
+                            });
+                            
+                            importedData.customRosters.forEach(roster => {
+                                const rosterDocRef = doc(customRostersCollectionRef);
+                                batch.set(rosterDocRef, roster);
+                            });
+
+                            await batch.commit();
+
+                            dataImportStatus.innerHTML = `<p class="text-green-600">Import erfolgreich! Alle Daten wurden wiederhergestellt.</p>`;
+                            showNotification("Alle Daten erfolgreich importiert.", "success");
+
+                        } catch (error) {
+                            console.error("Full Import Error:", error);
+                            dataImportStatus.innerHTML = `<p class="text-red-500">Fehler beim Import: ${error.message}</p>`;
+                        } finally {
+                            importAllFileInput.value = '';
+                            setTimeout(() => { dataImportStatus.innerHTML = '' }, 5000);
                         }
                     });
-                    await batch.commit();
-                    importStatus.innerHTML = `<p class="text-green-600">Import erfolgreich! ${importedGames.length} Spiele wurden in die Cloud geladen.</p>`;
                 } catch (error) {
-                    console.error("Import Error:", error);
-                    importStatus.innerHTML = `<p class="text-red-500">Fehler beim Import: ${error.message}</p>`;
-                } finally {
-                    importFileInput.value = '';
-                    setTimeout(() => { importStatus.innerHTML = '' }, 5000);
+                     console.error("File Read/Parse Error:", error);
+                     showNotification(`Fehler beim Lesen der Datei: ${error.message}`, 'error');
                 }
             };
             reader.readAsText(file);
@@ -1030,20 +1244,51 @@ Ergebnis 30:25 (15:12)
                 gameArchiveList.innerHTML = `<p class="text-gray-500">Verbinde mit der Datenbank...</p>`;
                 return;
             }
-            
-            const searchTerm = archiveSearchInput.value.toLowerCase();
-            const filteredGames = allGames.filter(game => {
-                if (!searchTerm) return true;
-                const homeTeam = getCorrectedName(game, game.homeTeam).toLowerCase();
-                const guestTeam = getCorrectedName(game, game.guestTeam).toLowerCase();
-                return homeTeam.includes(searchTerm) || guestTeam.includes(searchTerm);
-            });
 
-            if (filteredGames.length === 0) {
-                gameArchiveList.innerHTML = `<p class="text-gray-500">Keine Spiele gefunden.</p>`;
+            const primaryTeam = archiveSearchInput.value.toLowerCase().trim();
+            const locationFilter = archiveFilterLocation.value;
+            const opponentFilter = archiveFilterOpponent.value;
+
+            let gamesToShow = [...allGames];
+
+            if (primaryTeam) {
+                populateArchiveOpponentFilter(primaryTeam);
+                gamesToShow = gamesToShow.filter(game => {
+                    const homeTeam = getCorrectedName(game, game.homeTeam).toLowerCase();
+                    const guestTeam = getCorrectedName(game, game.guestTeam).toLowerCase();
+                    return homeTeam.includes(primaryTeam) || guestTeam.includes(primaryTeam);
+                });
+                
+                if (locationFilter !== 'all') {
+                    gamesToShow = gamesToShow.filter(game => {
+                        const homeTeam = getCorrectedName(game, game.homeTeam).toLowerCase();
+                        if (locationFilter === 'home') {
+                            return homeTeam.includes(primaryTeam);
+                        }
+                        if (locationFilter === 'away') {
+                            return !homeTeam.includes(primaryTeam);
+                        }
+                        return true;
+                    });
+                }
+                
+                if (opponentFilter !== 'all') {
+                    gamesToShow = gamesToShow.filter(game => {
+                        const homeTeam = getCorrectedName(game, game.homeTeam);
+                        const guestTeam = getCorrectedName(game, game.guestTeam);
+                        return homeTeam === opponentFilter || guestTeam === opponentFilter;
+                    });
+                }
+            } else {
+                 populateArchiveOpponentFilter(null);
+            }
+            
+            if (gamesToShow.length === 0) {
+                gameArchiveList.innerHTML = `<p class="text-gray-500">Keine Spiele für die gewählten Filter gefunden.</p>`;
                 return;
             }
-            gameArchiveList.innerHTML = filteredGames.map(game => {
+
+            gameArchiveList.innerHTML = gamesToShow.map(game => {
                 const homeTeam = getCorrectedName(game, game.homeTeam);
                 const guestTeam = getCorrectedName(game, game.guestTeam);
                 return `
@@ -1056,17 +1301,51 @@ Ergebnis 30:25 (15:12)
                         <div class="flex items-center justify-between w-full sm:w-auto">
                              <p class="text-xl sm:text-2xl font-bold text-indigo-600">${game.finalScore}</p>
                              <div class="flex items-center space-x-2 ml-4">
-                                <div data-game-id="${game.id}" class="edit-game-btn text-gray-400 hover:text-yellow-500 p-2 rounded-full hover:bg-yellow-100" title="Spiel bearbeiten">
+                                 <div data-game-id="${game.id}" class="edit-game-btn text-gray-400 hover:text-yellow-500 p-2 rounded-full hover:bg-yellow-100" title="Spiel bearbeiten">
                                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
-                                </div>
-                                <div data-game-id="${game.id}" class="delete-game-btn text-gray-400 hover:text-red-500 p-2 rounded-full hover:bg-red-100" title="Spiel löschen">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                                </div>
+                                 </div>
+                                 <div data-game-id="${game.id}" class="delete-game-btn text-gray-400 hover:text-red-500 p-2 rounded-full hover:bg-red-100" title="Spiel löschen">
+                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                 </div>
                              </div>
                         </div>
                     </div>
                 </div>
             `}).join('');
+        }
+        
+        function populateArchiveOpponentFilter(primaryTeam) {
+            const opponents = new Set();
+            if (primaryTeam) {
+                archiveFilterOpponent.disabled = false;
+                const gamesOfPrimaryTeam = allGames.filter(game => {
+                    const home = getCorrectedName(game, game.homeTeam).toLowerCase();
+                    const guest = getCorrectedName(game, game.guestTeam).toLowerCase();
+                    return home.includes(primaryTeam) || guest.includes(primaryTeam);
+                });
+                
+                gamesOfPrimaryTeam.forEach(game => {
+                    const home = getCorrectedName(game, game.homeTeam);
+                    const guest = getCorrectedName(game, game.guestTeam);
+                    if (home.toLowerCase().includes(primaryTeam)) {
+                        opponents.add(guest);
+                    } else {
+                        opponents.add(home);
+                    }
+                });
+            } else {
+                archiveFilterOpponent.disabled = true;
+            }
+
+            const sortedOpponents = [...opponents].sort((a,b) => a.localeCompare(b));
+            const currentSelection = archiveFilterOpponent.value;
+            archiveFilterOpponent.innerHTML = '<option value="all">Alle Gegner</option>';
+            sortedOpponents.forEach(op => {
+                archiveFilterOpponent.innerHTML += `<option value="${op}">${op}</option>`;
+            });
+            if (sortedOpponents.includes(currentSelection)) {
+                archiveFilterOpponent.value = currentSelection;
+            }
         }
         
         const playerColors = {};
@@ -1182,7 +1461,7 @@ Ergebnis 30:25 (15:12)
                     title: { display: true, text: 'Spielverlauf' },
                     tooltip: { callbacks: {
                         title: function(context) {
-                            const dp = context[0].raw; const min = Math.floor(dp.x); const sec = Math.round((dp.x - min) * 60);
+                            const dp = context[0].raw; const min = Math.floor(dp.x); const sec = Math.round((dp.label - min) * 60);
                             return `Minute: ${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
                         },
                         label: function(context) {
@@ -1268,8 +1547,8 @@ Ergebnis 30:25 (15:12)
             
             if (currentSelection && sortedTeams.includes(currentSelection)) {
                 teamSelect.value = currentSelection;
-            } else if (sortedTeams.includes(SG_BUENDE_DUENNE)) {
-                teamSelect.value = SG_BUENDE_DUENNE;
+            } else if (sortedTeams.includes("SG Bünde-Dünne")) {
+                teamSelect.value = "SG Bünde-Dünne";
             }
         }
 
@@ -1350,7 +1629,7 @@ Ergebnis 30:25 (15:12)
                         </div>
                     </div>
                      <div class="mt-6">
-                        <h4 class="font-semibold mb-2 text-sm">7-Meter Quote (${total7mGoals}/${total7mAttempts})</h4>
+                        <h4 class="font-semibold mb-2 text-sm">7-Meter Quote (${total7mGoals} Tore / ${total7mAttempts} Versuche)</h4>
                         <div class="w-full bg-gray-200 rounded-full h-6">
                             <div class="bg-blue-500 h-full rounded-full text-white text-xs flex items-center justify-center" style="width: ${sevenMeterQuote}%">${sevenMeterQuote}%</div>
                         </div>
@@ -1429,10 +1708,10 @@ Ergebnis 30:25 (15:12)
             playerTeamFilter.innerHTML = '<option value="all">-- Alle Teams --</option>';
             sortedTeams.forEach(team => { playerTeamFilter.innerHTML += `<option value="${team}">${team}</option>`; });
             
-            if (sortedTeams.includes(currentSelection)) {
+            if (currentSelection && sortedTeams.includes(currentSelection)) {
                 playerTeamFilter.value = currentSelection;
-            } else if (sortedTeams.includes(SG_BUENDE_DUENNE)) {
-                playerTeamFilter.value = SG_BUENDE_DUENNE;
+            } else if (sortedTeams.includes("SG Bünde-Dünne")) {
+                playerTeamFilter.value = "SG Bünde-Dünne";
             }
         }
 
@@ -1515,7 +1794,7 @@ Ergebnis 30:25 (15:12)
                         <div class="bg-white p-3 rounded-lg shadow"><p class="text-2xl font-bold">${stats.games}</p><p class="text-xs text-gray-500">Spiele</p></div>
                         <div class="bg-white p-3 rounded-lg shadow"><p class="text-2xl font-bold">${stats.goals}</p><p class="text-xs text-gray-500">Tore</p></div>
                         <div class="bg-white p-3 rounded-lg shadow"><p class="text-2xl font-bold">${goalsPerGame}</p><p class="text-xs text-gray-500">Tore/Spiel</p></div>
-                        <div class="bg-white p-3 rounded-lg shadow"><p class="text-2xl font-bold">${sevenMeterQuote}%</p><p class="text-sm text-gray-500">7m (${stats.sevenMeterGoals}/${stats.sevenMetersAttempted})</p></div>
+                        <div class="bg-white p-3 rounded-lg shadow"><p class="text-2xl font-bold">${sevenMeterQuote}%</p><p class="text-sm text-gray-500">7m (${stats.sevenMeterGoals} Tore / ${stats.sevenMetersAttempted} Vers.)</p></div>
                         <div class="bg-white p-3 rounded-lg shadow"><p class="text-2xl font-bold">${stats.warnings}</p><p class="text-xs text-gray-500">Verwarn.</p></div>
                         <div class="bg-white p-3 rounded-lg shadow"><p class="text-2xl font-bold">${stats.suspensions}</p><p class="text-xs text-gray-500">2-Min</p></div>
                     </div>
@@ -1527,7 +1806,7 @@ Ergebnis 30:25 (15:12)
                            <canvas id="player-profile-chart"></canvas>
                         </div>
                     </div>
-                    <div class="bg-gray-50 p-4 sm:p-6 rounded-lg border">
+                    <div class="bg-white p-4 sm:p-6 rounded-lg border">
                          <h3 class="text-xl font-bold mb-4 text-indigo-700">Spieleliste</h3>
                          <div class="overflow-y-auto max-h-80">
                              <table class="min-w-full">
@@ -1677,69 +1956,36 @@ Ergebnis 30:25 (15:12)
             h2hResultsContainer.innerHTML = html;
         }
 
-        // --- Game Navigation Functions ---
-        function populateGameNavigation(gameId) {
-            gameNavSelect.innerHTML = '';
-            allGames.forEach(game => {
-                const option = document.createElement('option');
-                option.value = game.id;
-                option.textContent = `${game.date} - ${getCorrectedName(game, game.homeTeam)} vs ${getCorrectedName(game, game.guestTeam)}`;
-                option.selected = game.id === gameId;
-                gameNavSelect.appendChild(option);
-            });
-
-            const currentIndex = allGames.findIndex(g => g.id === gameId);
-            prevGameBtn.disabled = currentIndex === 0;
-            nextGameBtn.disabled = currentIndex === allGames.length - 1;
+        function renderSettings() {
+            renderCustomRosterManagement();
         }
 
-        function navigateToPreviousGame() {
-            const currentIndex = allGames.findIndex(g => g.id === currentlyLoadedGameId);
-            if (currentIndex > 0) {
-                renderGameDetail(allGames[currentIndex - 1].id, false);
-            }
-        }
+        // ===================================================================================
+        // ===== FIREBASE COMMUNICATION BLOCK - START ========================================
+        // ===================================================================================
+        // HINWEIS: Der folgende Code-Abschnitt ist für die Verbindung und Kommunikation
+        // mit der Firebase-Datenbank verantwortlich. Änderungen in diesem Bereich
+        // können die Funktionalität der App beeinträchtigen. Bitte nicht verändern,
+        // es sei denn, du weißt genau, was du tust.
+        // ===================================================================================
 
-        function navigateToNextGame() {
-            const currentIndex = allGames.findIndex(g => g.id === currentlyLoadedGameId);
-            if (currentIndex < allGames.length - 1) {
-                renderGameDetail(allGames[currentIndex + 1].id, false);
-            }
-        }
+        // --- Globale Firebase-Variablen ---
+        let app, db, auth;
+        let userId = null;
+        let isAuthReady = false;
+        let gamesCollectionRef = null;
+        let customRostersCollectionRef = null;
+        let unsubscribeFromGames = null;
+        let unsubscribeFromCustomRosters = null;
+        let appId;
 
-        // --- Firebase Real-time Listener ---
-        function listenForGames() {
-            if (unsubscribeFromGames) unsubscribeFromGames();
-            if (!gamesCollectionRef) {
-                console.error("Cannot listen for games, gamesCollectionRef is not initialized.");
-                return;
-            };
-            
-            console.log("Setting up Firestore listener on collection:", gamesCollectionRef.path);
-            unsubscribeFromGames = onSnapshot(gamesCollectionRef, snapshot => {
-                const gamesFromDb = [];
-                snapshot.forEach(doc => gamesFromDb.push(doc.data()));
-                
-                allGames = gamesFromDb.sort((a, b) => {
-                    const dateA = new Date(a.date.split('.').reverse().join('-')).getTime();
-                    const dateB = new Date(b.date.split('.').reverse().join('-')).getTime();
-                    return dateB - dateA; // Sort descending, newest first
-                });
-                
-                console.log('Data from Firestore loaded/updated:', allGames.length, 'games');
-                updateDynamicContent();
-            }, error => {
-                console.error("Error listening to Firestore collection:", error);
-                gameArchiveList.innerHTML = `<p class="text-red-500 p-4">Fehler beim Verbinden mit der Datenbank.</p>`;
-            });
-        }
-
-        // --- STARTUP ---
+        // --- Haupt-Initialisierungsfunktion für Firebase ---
         async function initializeAppAndAuth() {
             console.log("Starting Firebase initialization...");
             connectionStatusDot.className = 'w-3 h-3 rounded-full status-dot-checking';
             connectionStatusText.textContent = 'Verbinde...';
             
+            // Feste Firebase-Konfiguration für den Zugriff auf deine spezifische Datenbank.
             const firebaseConfig = {
               apiKey: "AIzaSyBzvp7Gor7qzDn78QoVEHU-vwG7imY4xKw",
               authDomain: "sgbdmb2425.firebaseapp.com",
@@ -1753,18 +1999,16 @@ Ergebnis 30:25 (15:12)
 
             try {
                 app = initializeApp(firebaseConfig);
-                console.log("Firebase App initialized.");
-
                 db = getFirestore(app);
-                console.log("Firestore instance created.");
-
                 auth = getAuth(app);
-                console.log("Auth instance created.");
+                console.log("Firebase App initialized with original hardcoded config.");
 
-                // Use a public path for the games collection
+                // Datenbank-Pfade. Alle Daten werden öffentlich unter der App-ID gespeichert.
                 gamesCollectionRef = collection(db, 'artifacts', appId, 'public', 'data', 'games');
-                console.log("Using public database path:", gamesCollectionRef.path);
-
+                customRostersCollectionRef = collection(db, 'artifacts', appId, 'public', 'data', 'custom-rosters');
+                
+                console.log("Using database path for games:", gamesCollectionRef.path);
+                console.log("Using database path for custom rosters:", customRostersCollectionRef.path);
 
                 onAuthStateChanged(auth, (user) => {
                     if (user) {
@@ -1772,20 +2016,26 @@ Ergebnis 30:25 (15:12)
                         userId = user.uid; 
                         isAuthReady = true;
                         connectionStatusDot.className = 'w-3 h-3 rounded-full status-dot-connected';
-                        connectionStatusText.textContent = 'Verbunden (Öffentlich)';
+                        connectionStatusText.textContent = 'Verbunden';
+                        
+                        // Start listening to data once authenticated
                         listenForGames(); 
+                        listenForCustomRosters();
                     } else {
                         console.log("Auth state changed: User is signed out.");
                         isAuthReady = false;
                         userId = null;
                         if(unsubscribeFromGames) unsubscribeFromGames();
+                        if(unsubscribeFromCustomRosters) unsubscribeFromCustomRosters();
                         allGames = [];
+                        allCustomRosters = [];
                         connectionStatusDot.className = 'w-3 h-3 rounded-full status-dot-disconnected';
                         connectionStatusText.textContent = 'Nicht verbunden';
                         updateDynamicContent();
                     }
                 });
                 
+                // Anonyme Anmeldung
                 console.log("Attempting to sign in anonymously...");
                 await signInAnonymously(auth);
                 console.log("Sign in anonymously successful.");
@@ -1797,7 +2047,238 @@ Ergebnis 30:25 (15:12)
                 connectionStatusText.textContent = 'Initialisierungsfehler';
             }
         }
+        
+        // --- Firebase Real-time Listener ---
+        function listenForGames() {
+            if (unsubscribeFromGames) unsubscribeFromGames();
+            if (!gamesCollectionRef) return;
+            unsubscribeFromGames = onSnapshot(gamesCollectionRef, snapshot => {
+                const gamesFromDb = snapshot.docs.map(doc => doc.data());
+                allGames = gamesFromDb.sort((a, b) => new Date(b.date.split('.').reverse().join('-')).getTime() - new Date(a.date.split('.').reverse().join('-')).getTime());
+                console.log('Games data loaded/updated:', allGames.length);
+                updateDynamicContent();
+            }, error => console.error("Error listening to games collection:", error));
+        }
 
+        function listenForCustomRosters() {
+            if(unsubscribeFromCustomRosters) unsubscribeFromCustomRosters();
+            if(!customRostersCollectionRef) return;
+            unsubscribeFromCustomRosters = onSnapshot(customRostersCollectionRef, snapshot => {
+                allCustomRosters = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                console.log('Custom rosters loaded/updated:', allCustomRosters.length);
+                if(views.einstellungen.classList.contains('view-active')) renderCustomRosterManagement();
+            }, error => console.error("Error listening to custom rosters:", error));
+        }
+
+        // ===================================================================================
+        // ===== FIREBASE COMMUNICATION BLOCK - END ==========================================
+        // ===================================================================================
+
+        // --- CUSTOM ROSTER FUNCTIONS ---
+        function renderCustomRosterManagement() {
+            if (!customRosterManagementContainer) return;
+
+            let html = `
+                <div class="flex flex-wrap gap-4 justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold text-indigo-700">Kader Archiv</h3>
+                    <div class="flex gap-2">
+                        <button id="import-roster-archive-btn" class="bg-teal-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-teal-600 transition text-sm">Archiv importieren</button>
+                        <button id="create-custom-roster-btn" class="bg-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-600 transition">Neuen Kader anlegen</button>
+                    </div>
+                </div>
+            `;
+
+            if (allCustomRosters.length > 0) {
+                html += '<ul class="space-y-2">';
+                allCustomRosters.forEach(roster => {
+                    html += `
+                        <li class="p-3 bg-white border rounded-lg flex justify-between items-center">
+                            <span class="font-semibold">${roster.name}</span>
+                            <div class="flex items-center space-x-1 shrink-0">
+                                <button data-roster-id="${roster.id}" class="export-single-roster-btn p-2 text-gray-400 hover:text-cyan-500 rounded-full hover:bg-cyan-100" title="Diesen Kader exportieren">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 pointer-events-none" viewBox="0 0 20 20" fill="currentColor">
+                                        <path d="M10 3a1 1 0 011 1v5.586l2.293-2.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 9.586V4a1 1 0 011-1z" />
+                                        <path d="M3 12a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" />
+                                    </svg>
+                                </button>
+                                <button data-roster-id="${roster.id}" class="edit-custom-roster-btn p-2 text-gray-400 hover:text-blue-500 rounded-full hover:bg-blue-100" title="Kader bearbeiten">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+                                </button>
+                                <button data-roster-id="${roster.id}" data-roster-name="${roster.name}" class="delete-custom-roster-btn p-2 text-gray-400 hover:text-red-500 rounded-full hover:bg-red-100" title="Kader löschen">
+                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                </button>
+                            </div>
+                        </li>
+                    `;
+                });
+                html += '</ul>';
+            } else {
+                html += '<p class="text-gray-500 mt-4">Noch keine Kader im Archiv.</p>';
+            }
+            
+            customRosterManagementContainer.innerHTML = html;
+
+            // Add event listeners
+            document.getElementById('create-custom-roster-btn').addEventListener('click', () => openCustomRosterModal());
+            document.getElementById('import-roster-archive-btn').addEventListener('click', () => importRosterArchiveInput.click());
+            document.querySelectorAll('.export-single-roster-btn').forEach(btn => btn.addEventListener('click', (e) => exportSingleCustomRoster(e.currentTarget.dataset.rosterId)));
+            document.querySelectorAll('.edit-custom-roster-btn').forEach(btn => btn.addEventListener('click', (e) => openCustomRosterModal(e.currentTarget.dataset.rosterId)));
+            document.querySelectorAll('.delete-custom-roster-btn').forEach(btn => btn.addEventListener('click', (e) => {
+                const rosterId = e.currentTarget.dataset.rosterId;
+                const rosterName = e.currentTarget.dataset.rosterName;
+                showConfirmation(`Möchtest du den Kader "${rosterName}" wirklich löschen?`, () => deleteCustomRoster(rosterId));
+            }));
+        }
+        
+        function openCustomRosterModal(rosterId = null) {
+            currentlyEditingCustomRosterId = rosterId;
+            customRosterEditor.innerHTML = '';
+
+            if (rosterId) {
+                const rosterData = allCustomRosters.find(r => r.id === rosterId);
+                if (!rosterData) return;
+                customRosterModalTitle.textContent = "Kader bearbeiten";
+                customRosterNameInput.value = rosterData.name;
+                const sortedPlayers = Object.entries(rosterData.roster || {}).sort((a,b) => parseInt(a[0]) - parseInt(b[0]));
+                sortedPlayers.forEach(([number, name]) => addPlayerToCustomRosterUI(number, name));
+            } else {
+                customRosterModalTitle.textContent = "Neuen Kader anlegen";
+                customRosterNameInput.value = '';
+                addPlayerToCustomRosterUI('', ''); // Start with one empty row
+            }
+            customRosterModal.classList.add('flex');
+        }
+
+        function addPlayerToCustomRosterUI(number = '', name = '') {
+            const div = document.createElement('div');
+            div.className = 'flex items-center space-x-2 custom-roster-player-row';
+            div.innerHTML = `
+                <input type="number" value="${number}" placeholder="Nr." class="custom-roster-number w-20 p-2 border rounded-md">
+                <input type="text" value="${name}" placeholder="Name" class="custom-roster-name flex-grow p-2 border rounded-md">
+                <button class="remove-custom-player-btn p-2 text-red-500 hover:bg-red-100 rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+            `;
+            customRosterEditor.appendChild(div);
+            div.querySelector('.remove-custom-player-btn').addEventListener('click', () => div.remove());
+        }
+
+        async function saveCustomRoster() {
+            const name = customRosterNameInput.value.trim();
+            if (!name) {
+                showNotification("Bitte einen Kadernamen eingeben.", "error");
+                return;
+            }
+
+            const playerRows = customRosterEditor.querySelectorAll('.custom-roster-player-row');
+            const roster = {};
+            let hasError = false;
+            playerRows.forEach(row => {
+                const number = row.querySelector('.custom-roster-number').value.trim();
+                const playerName = row.querySelector('.custom-roster-name').value.trim();
+                if (number && playerName) {
+                    if (roster[number]) {
+                        hasError = true;
+                    }
+                    roster[number] = playerName;
+                }
+            });
+
+            if (hasError) {
+                showNotification("Jede Spielernummer darf nur einmal vorkommen.", "error");
+                return;
+            }
+
+            const dataToSave = { name, roster };
+
+            try {
+                if (currentlyEditingCustomRosterId) {
+                    const docRef = doc(customRostersCollectionRef, currentlyEditingCustomRosterId);
+                    await updateDoc(docRef, dataToSave);
+                    showNotification("Kader erfolgreich aktualisiert.", "success");
+                } else {
+                    await addDoc(customRostersCollectionRef, dataToSave);
+                    showNotification("Kader erfolgreich erstellt.", "success");
+                }
+                customRosterModal.classList.remove('flex');
+            } catch (error) {
+                console.error("Error saving custom roster:", error);
+                showNotification("Fehler beim Speichern des Kaders.", "error");
+            }
+        }
+
+        async function deleteCustomRoster(rosterId) {
+            if (!isAuthReady || !customRostersCollectionRef) return;
+            try {
+                await deleteDoc(doc(customRostersCollectionRef, rosterId));
+                showNotification("Kader erfolgreich gelöscht.", "success");
+            } catch (error) {
+                console.error("Error deleting custom roster:", error);
+                showNotification("Kader konnte nicht gelöscht werden.", "error");
+            }
+        }
+        
+        function exportSingleCustomRoster(rosterId) {
+            const rosterToExport = allCustomRosters.find(r => r.id === rosterId);
+            if (!rosterToExport) {
+                showNotification("Der zu exportierende Kader wurde nicht gefunden.", "error");
+                return;
+            }
+
+            const { id, ...dataToExport } = rosterToExport;
+            
+            const jsonString = JSON.stringify(dataToExport, null, 2);
+            const blob = new Blob([jsonString], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            const safeFilename = rosterToExport.name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+            a.download = `kader_export_${safeFilename}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showNotification(`Kader "${rosterToExport.name}" wird exportiert...`, "success");
+        }
+
+        async function importCustomRosters(event) {
+            if (!isAuthReady || !customRostersCollectionRef) {
+                showNotification("Datenbank ist nicht bereit.", "error");
+                return;
+            }
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                try {
+                    const importedRosters = JSON.parse(e.target.result);
+                    if (!Array.isArray(importedRosters)) { throw new Error("Importierte Datei hat kein gültiges Format (Array erwartet)."); }
+                    
+                    showNotification(`Importiere ${importedRosters.length} Kader...`, 'info');
+                    
+                    const batch = writeBatch(db);
+                    importedRosters.forEach(roster => {
+                        // Basic validation for a roster object
+                        if (roster && typeof roster.name === 'string' && typeof roster.roster === 'object') {
+                            const docRef = doc(customRostersCollectionRef); // Create a new document reference for each roster
+                            batch.set(docRef, roster);
+                        }
+                    });
+                    
+                    await batch.commit();
+                    showNotification(`Import erfolgreich! ${importedRosters.length} Kader wurden zum Archiv hinzugefügt.`, 'success');
+                } catch (error) {
+                    console.error("Roster Import Error:", error);
+                    showNotification(`Fehler beim Import des Kader-Archivs: ${error.message}`, 'error');
+                } finally {
+                    importRosterArchiveInput.value = ''; // Reset file input
+                }
+            };
+            reader.readAsText(file);
+        }
+
+
+        // --- STARTUP ---
         document.addEventListener('DOMContentLoaded', () => {
             setupUI();
             initializeAppAndAuth();
